@@ -41,7 +41,7 @@ paginate: 5 # amount of posts to show
 paginate_path: /page:num/
 timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
-teaser: /assets/images/thumbnail/teaser.jpg
+teaser: /assets/images/thumbnails/teaser.jpg
 
 collections:
     # _tutorials
@@ -113,6 +113,7 @@ defaults:
       comments: true
       share: true
       related: true
+      teaser: /assets/images/thumbnails/teaser.jpg
   # _pages
   - scope:
       path: "_pages"
@@ -127,6 +128,7 @@ defaults:
     values:
         layout: single
         author_profile: true
+
 
 category_archive:
   type: liquid

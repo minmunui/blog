@@ -5,8 +5,19 @@ categories:
   - blog
 tags:
   - 잡담
-classes: wide
+excerpt: 시간이 지나면서 내가 글과 점점 멀어지고 있다는 생각이 들었다.
+header:
+    teaser: "/assets/images/thumbnails/posts/1.jpeg"
+    overlay_image: /assets/images/thumbnails/posts/1.jpeg
+    image_description: "부산대학교의 해질녘"
+    caption: "부산대학교의 해질녘"
+    overlay_filter: 0.5
+    tagline: "잘 부탁드립니다."
+toc: true
+toc_sticky: true
 ---
+
+### 글을 쓰게 된 이유
 
 시간이 지나면서 내가 글과 점점 멀어지고 있다는 생각이 들었다. 무언가 긴 글을 읽기 시작하면 무언가 시간을 낭비하는 것 같기도 하고, `‘내가 지금 이럴 때가 아닌데’` 라는 생각이 들기도 했다. 그래서 그런지 글을 읽는 시간이 점점 줄어가는 것이 느껴졌고, 읽지 않다보니 자연스럽게 글을 집중해서 읽는 것이 어려워지기 시작함을 느꼈다. 내가 좋아하는 유튜버의 이야기를 들으며 글을 좀 읽어야겠다는 결심을 했다.
 
