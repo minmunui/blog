@@ -54,6 +54,10 @@ collections:
     pages:
       output: true
       permalink: /:title/
+    # _photos
+    photos:
+      output: true
+      permalink: /photos/:path/
 
 include:
   - _pages
@@ -130,6 +134,17 @@ defaults:
     values:
         layout: single
         author_profile: true
+  - scope:
+      path: "_photos"
+      type: photos
+    values:
+        layout: single
+        author_profile: true
+        read_time: true
+        comments: true
+        share: true
+        related: true
+        teaser: /assets/images/thumbnails/teaser.jpg
 
 
 category_archive:
