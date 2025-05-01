@@ -22,6 +22,14 @@
 <link rel="icon" type="image/png" href="/assets/images/logo.png">
 <link rel="shortcut icon" href="/assets/images/logo.png">
 <link rel="apple-touch-icon" href="/assets/images/logo.png">
+
+<!-- Open Graph -->
+<meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+<meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+<meta property="og:url" content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+<meta property="og:image" content="{% if page.og_image %}{{ page.og_image | absolute_url }}{% elsif page.header.og_image %}{{ page.header.og_image | absolute_url }}{% elsif page.header.image %}{{ page.header.image | absolute_url }}{% else %}{{ site.og_image | absolute_url }}{% endif %}">
+<meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
 
 {% if site.head_scripts %}

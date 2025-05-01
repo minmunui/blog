@@ -41,6 +41,7 @@ paginate_path: /page:num/
 timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 teaser: /assets/images/thumbnails/teaser.jpg
+og_image: /assets/images/thumbnails/teaser.jpg
 
 collections:
     # _tutorials
