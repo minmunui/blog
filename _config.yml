@@ -15,6 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 title: Minmunui Blog
 email: ehdwls1638@gmail.com
+baseurl: "https://minmunui.github.io/blog"
 locale: 'ko-KR'
 description: >- # this means to ignore newlines until "baseurl:"
   컴퓨터공학, 인공지능, 그 외의 잡담들을 쓰고 있는 블로그입니다.
