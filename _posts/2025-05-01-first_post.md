@@ -63,8 +63,8 @@ toc_sticky: true
 
 <img src="/assets/images/thumbnails/posts/1.jpeg" alt="부산대학교의 해질녘 풍경">
 
-![1.jpeg](blog/assets/images/thumbnails/posts/1.jpeg)
+![1.jpeg](/blog/assets/images/thumbnails/posts/1.jpeg)
 
-<img src="blog/assets/images/thumbnails/posts/1.jpeg" alt="부산대학교의 해질녘 풍경">
+<img src="/blog/assets/images/thumbnails/posts/1.jpeg" alt="부산대학교의 해질녘 풍경">
 
 부산대학교에는 열대나무가 있어서 그런지 해외에 간 듯한 사진을 찍을 수 있다.
