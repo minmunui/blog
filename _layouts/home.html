@@ -1,0 +1,36 @@
+---
+layout: default
+---
+<div class="page__hero">
+    <p class="reference"><strong>사진 : <a
+            href="https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%A1%B0%EB%AA%85%EC%9D%B4-%EC%BC%9C%EC%A7%84-%EB%8F%84%EC%84%9C%EA%B4%80-%EC%82%AC%EC%A7%84-sfL_QOnmy00?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>의<a
+            href="https://unsplash.com/ko/@itfeelslikefilm?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">🇸🇮
+        Janko Ferlič</a></strong>
+    </p>
+    <img src="/assets/images/main-banner.jpg" alt="메인 배너" class="page__hero page__hero--image">
+    <div class="page__hero--overlay">
+        <h1 class="page__hero--title">minmunui blog</h1>
+        <div class="page__hero--buttons">
+            <a href="/tags" class="btn btn--primary">블로그 보기</a>
+            <a href="/about" class="btn btn--secondary">About Me</a>
+        </div>
+    </div>
+</div>
+
+<div class='homepage__content'>
+    <h3 class="archive__subtitle">{{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}</h3>
+
+    {% if paginator %}
+    {% assign posts = paginator.posts %}
+    {% else %}
+    {% assign posts = site.posts %}
+    {% endif %}
+
+    {% assign entries_layout = page.entries_layout | default: 'list' %}
+    <div class="entries-{{ entries_layout }}">
+        {% include documents-collection.html entries=posts type=entries_layout %}
+    </div>
+
+</div>
+
+{% include paginator.html %}

@@ -13,16 +13,24 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: MM
-email:
+title: Minmunui Blog
+favicon: /assets/images/logo.png
+email: ehdwls1638@gmail.com
+locale: 'ko-KR'
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-twitter_username: username
-github_username: username
-minimal_mistakes_skin: default
+  컴퓨터공학, 인공지능, 그 외의 잡담들을 쓰고 있는 블로그입니다.
+twitter_username: minmunui
+github_username: minmunui
+minimal_mistakes_skin: "dark"
 search: true
+logo: /assets/images/logo.png
+repository: "minmunui/blog"
+
+breadcrumbs: true
+show_date: true
+date_format: "%Y-%m-%d"
+
+enable_copy_code_button: true
 
 # Build settings
 markdown: kramdown
@@ -32,6 +40,18 @@ permalink: /:categories/:title/
 paginate: 5 # amount of posts to show
 paginate_path: /page:num/
 timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+teaser: /assets/images/thumbnail/teaser.jpg
+
+collections:
+    # _tutorials
+    tutorials:
+        output: true
+        permalink: /:collection/:path/
+    # _pages
+    pages:
+      output: true
+      permalink: /:title/
 
 include:
   - _pages
@@ -58,34 +78,28 @@ plugins:
   - jekyll-include-cache
 
 author:
-  name   : "First Lastname"
-  avatar : "/assets/images/bio-photo.jpg"
-  bio    : "My awesome biography constrained to a sentence or two goes here."
+  name: "Dongjin Park"
+  avatar: "/assets/images/bio-photo.jpeg"
+  bio: "컴퓨터공학을 전공하고 있습니다."
   links:
     - label: "Website"
       icon: "fas fa-fw fa-link"
-      url: "https://"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
+      url: "https://minmunui.github.io/blog/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/minmunui"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: "https://instagram.com/jinee_dong"
 
 footer:
   links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/minmunui"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: "https://instagram.com/jinee_dong"
 
 defaults:
   # _posts
@@ -106,6 +120,13 @@ defaults:
     values:
       layout: single
       author_profile: true
+  # _tutorials
+  - scope:
+      path: "_tutorials"
+      type: tutorials
+    values:
+        layout: single
+        author_profile: true
 
 category_archive:
   type: liquid
