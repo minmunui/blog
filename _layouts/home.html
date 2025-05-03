@@ -31,6 +31,15 @@ layout: default
         {% include documents-collection.html entries=posts type=entries_layout %}
     </div>
 
+
+</div>
+
+<div class='homepage__content'>
+    {% assign photos = site.photos | where_exp: "item", "item.hidden != true" | sort: "date" | reverse %}
+    {% assign photos_limit = 4 %}
+    <div class="entries-{{ entries_layout }}">
+        {% include documents-collection.html entries=photos type=entries_layout %}
+    </div>
 </div>
 
 {% include paginator.html %}
