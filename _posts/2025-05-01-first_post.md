@@ -7,8 +7,8 @@ tags:
   - 잡담
 excerpt: 시간이 지나면서 내가 글과 점점 멀어지고 있다는 생각이 들었다.
 header:
-    teaser: "/assets/images/thumbnails/posts/1.jpeg"
-    overlay_image: /assets/images/thumbnails/posts/1.jpeg
+    teaser: "/assets/images/posts/2025-05-01-first_post/teaser.jpeg"
+    overlay_image: "/assets/images/posts/2025-05-01-first_post/teaser.jpeg"
     image_description: "부산대학교의 해질녘, 2025년 4월 29일"
     caption: "부산대학교의 해질녘"
     overlay_filter: 0.5
@@ -59,6 +59,6 @@ toc_sticky: true
 
 2025년 4월 30일 부산의 연구실에서
 
-<img src="{{ site.baseurl }}/assets/images/thumbnails/posts/1.jpeg" alt="부산대학교의 해질녘 풍경">
+<img src="{{ site.baseurl }}/assets/images/posts/2025-05-01-first_post/teaser.jpeg" alt="부산대학교의 해질녘 풍경">
 
 부산대학교에는 열대나무가 있어서 그런지 해외에 간 듯한 사진을 찍을 수 있다.
