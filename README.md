@@ -2,7 +2,7 @@
 
 블로그 포스팅을 위한 Jekyll 기반 정적 웹 프로젝트.
 
-minimal mistakes를 커스터마이징했습니다.
+[minimal mistakes](https://github.com/mmistakes/mm-github-pages-starter)를 커스터마이징했습니다.
 
 ### 설치 및 실행
 ```shell
