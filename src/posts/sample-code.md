@@ -1,6 +1,6 @@
 ---
 title: "Code Snippets Collection"
-date: 2025-12-26
+date: 2025-12-26T00:00:00.000Z
 description: "Useful code blocks in various languages."
 tags: ["code", "development"]
 category: "Development"

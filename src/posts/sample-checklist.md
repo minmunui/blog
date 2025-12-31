@@ -1,6 +1,6 @@
 ---
 title: "Project Launch Checklist"
-date: 2025-12-28
+date: 2025-12-28T00:00:00.000Z
 description: "A comprehensive checklist for your next project launch."
 tags: ["productivity", "planning"]
 category: "Productivity"

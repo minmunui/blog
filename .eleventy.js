@@ -11,11 +11,11 @@ module.exports = function (eleventyConfig) {
 
   // Filters
   eleventyConfig.addFilter("dateIso", (dateObj) => {
-    return DateTime.fromJSDate(dateObj).toISODate();
+    return DateTime.fromJSDate(dateObj).setZone("Asia/Seoul").toISODate();
   });
 
   eleventyConfig.addFilter("dateReadable", (dateObj) => {
-    return DateTime.fromJSDate(dateObj).toFormat("dd LLL yyyy");
+    return DateTime.fromJSDate(dateObj).setZone("Asia/Seoul").toFormat("yyyy. MM. dd");
   });
 
   // Collections

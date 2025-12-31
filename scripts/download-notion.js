@@ -36,11 +36,12 @@ async function convertToMarkdown(page) {
     
     // Extract metadata from properties (Adjust these based on your Notion DB schema)
     const title = page.properties.Name?.title[0]?.plain_text || "Untitled";
-    const date = page.properties.Date?.date?.start || new Date().toISOString().split('T')[0];
+    // Use ISO string for date to preserve full timestamp info
+    const date = page.properties.Date?.date?.start ? new Date(page.properties.Date.date.start).toISOString() : new Date().toISOString();
     const description = page.properties.Description?.rich_text[0]?.plain_text || "";
     const tags = page.properties.Tags?.multi_select?.map(tag => tag.name) || [];
     const category = page.properties.Category?.select?.name || "Uncategorized";
-    const lastModified = page.last_edited_time ? page.last_edited_time.split('T')[0] : date;
+    const lastModified = page.last_edited_time ? new Date(page.last_edited_time).toISOString() : date;
     
     // Create Front Matter
     const frontmatter = `---

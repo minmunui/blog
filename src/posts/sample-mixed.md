@@ -1,6 +1,6 @@
 ---
 title: "My Favorite Tools"
-date: 2025-12-24
+date: 2025-12-24T00:00:00.000Z
 description: "A mixed content post with lists, links, and text."
 tags: ["tools", "productivity"]
 category: "Productivity"

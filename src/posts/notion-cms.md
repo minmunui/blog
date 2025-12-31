@@ -1,6 +1,6 @@
 ---
 title: "Why I use Notion as a CMS"
-date: 2025-12-28
+date: 2025-12-28T00:00:00.000Z
 description: "The benefits of using Notion for managing blog content."
 tags: ["notion", "productivity"]
 visible: true

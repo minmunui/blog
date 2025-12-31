@@ -1,6 +1,6 @@
 ---
 title: "Comparison of JS Frameworks"
-date: 2025-12-27
+date: 2025-12-27T00:00:00.000Z
 description: "A quick table comparison of popular JavaScript frameworks."
 tags: ["development", "javascript"]
 category: "Development"

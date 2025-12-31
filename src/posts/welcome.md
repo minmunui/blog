@@ -1,6 +1,6 @@
 ---
 title: "Welcome to My New Blog"
-date: 2025-12-30
+date: 2025-12-30T00:00:00.000Z
 description: "This is the first post on my new Notion-powered Eleventy blog."
 tags: ["personal", "update"]
 visible: true

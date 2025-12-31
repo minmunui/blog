@@ -1,6 +1,6 @@
 ---
 title: "Mastering Notion-Style Callouts"
-date: 2025-12-30
+date: 2025-12-30T00:00:00.000Z
 lastModified: 2026-01-02
 description: "How to use blockquotes and callouts effectively in your markdown content."
 tags: ["markdown", "design"]

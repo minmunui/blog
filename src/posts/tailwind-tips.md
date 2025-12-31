@@ -1,6 +1,6 @@
 ---
 title: "Tailwind CSS Tips & Tricks"
-date: 2025-12-27
+date: 2025-12-27T00:00:00.000Z
 description: "Some cool utility classes I learned recently."
 tags: ["css", "tailwind", "design"]
 visible: true

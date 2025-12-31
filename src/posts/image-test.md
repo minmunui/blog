@@ -1,6 +1,6 @@
 ---
 title: "Thumbnail Test Post"
-date: 2025-12-31
+date: 2025-12-31T00:00:00.000Z
 description: "This is a test post to verify that the thumbnail image is working correctly."
 tags: ["test", "image"]
 visible: true

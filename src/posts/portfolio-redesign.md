@@ -1,6 +1,6 @@
 ---
 title: "Project Update: Portfolio Redesign"
-date: 2025-12-26
+date: 2025-12-26T00:00:00.000Z
 description: "Reflecting on the recent updates to my portfolio site."
 tags: ["personal", "portfolio"]
 visible: true

@@ -1,6 +1,6 @@
 ---
 title: "Hidden Details (Toggle)"
-date: 2025-12-25
+date: 2025-12-25T00:00:00.000Z
 description: "Using the details tag to create collapsible content."
 tags: ["html", "tips"]
 category: "Development"
