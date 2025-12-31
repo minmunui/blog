@@ -81,6 +81,7 @@ title: Blog Archive
                      data-title="{{ post.data.title | lower }}" 
                      data-tags="{{ post.data.tags | join(',') }}"
                      data-category="{{ post.data.category | default('Uncategorized') }}">
+                {% if post.data.image %}
                     <div class="aspect-video w-full overflow-hidden rounded-t-xl border-b bg-muted">
                         <img src="{{ post.data.image | url }}" alt="{{ post.data.title }}" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
                     </div>

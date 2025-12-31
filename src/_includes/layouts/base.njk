@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title | default("My Blog") }}</title>
+    <title>{{ title | default("Blog") }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}">
     <script>
         // Check for dark mode preference
@@ -20,7 +20,7 @@
         <div class="flex h-14 items-center w-full px-4 md:px-8">
             <div class="mr-4 hidden md:flex">
                 <a href="{{ '/' | url }}" class="mr-6 flex items-center space-x-2">
-                    <span class="hidden font-bold sm:inline-block">My Blog</span>
+                    <span class="hidden font-bold sm:inline-block">Blog</span>
                 </a>
                 <nav class="flex items-center space-x-6 text-sm font-medium">
                     <a href="{{ '/posts' | url }}" class="transition-colors hover:text-foreground/80 text-foreground/60">Blog</a>
