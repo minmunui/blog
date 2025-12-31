@@ -102,7 +102,7 @@ title: Blog Archive
                         <p class="text-sm text-muted-foreground line-clamp-3">{{ post.data.description }}</p>
                     {% endif %}
                 </div>
-                <a href="{{ post.url }}" class="absolute inset-0"><span class="sr-only">View Article</span></a>
+                <a href="{{ post.url | url }}" class="absolute inset-0"><span class="sr-only">View Article</span></a>
             </article>
             {% endfor %}
             <div id="no-results" class="hidden text-center text-muted-foreground py-10 w-full col-span-2">

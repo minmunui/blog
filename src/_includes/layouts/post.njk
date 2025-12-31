@@ -39,7 +39,7 @@ layout: layouts/base.njk
 
     <div class="flex-1">
       {% if previousPost %}
-        <a href="{{ previousPost.url }}" class="group flex flex-col space-y-1 rounded-lg border p-4 transition-colors hover:bg-muted/50 text-left">
+        <a href="{{ previousPost.url | url }}" class="group flex flex-col space-y-1 rounded-lg border p-4 transition-colors hover:bg-muted/50 text-left">
           <span class="text-xs text-muted-foreground group-hover:text-foreground">Previous</span>
           <span class="font-medium truncate">{{ previousPost.data.title }}</span>
         </a>
@@ -48,7 +48,7 @@ layout: layouts/base.njk
 
     <div class="flex-1 text-right">
       {% if nextPost %}
-        <a href="{{ nextPost.url }}" class="group flex flex-col space-y-1 rounded-lg border p-4 transition-colors hover:bg-muted/50 text-right">
+        <a href="{{ nextPost.url | url }}" class="group flex flex-col space-y-1 rounded-lg border p-4 transition-colors hover:bg-muted/50 text-right">
           <span class="text-xs text-muted-foreground group-hover:text-foreground">Next</span>
           <span class="font-medium truncate">{{ nextPost.data.title }}</span>
         </a>
