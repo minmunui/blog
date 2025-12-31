@@ -28,7 +28,7 @@ Hello! I'm a passionate developer who loves building products that solve real-wo
   <!-- Item 1: 효성중공업 -->
   <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
     <div class="flex items-center justify-center w-10 h-10 rounded-full border border-background bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 overflow-hidden">
-       <img src="/assets/infologo/hyosung.jpeg" alt="Hyosung Logo" class="w-full h-full object-contain">
+       <img src="{{ '/assets/infologo/hyosung.jpeg' | url }}" alt="Hyosung Logo" class="w-full h-full object-contain">
     </div>
     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border bg-card text-card-foreground shadow-sm">
       <div class="flex items-center justify-between space-x-2 mb-1">
@@ -50,7 +50,7 @@ Hello! I'm a passionate developer who loves building products that solve real-wo
   <!-- Item 2: 삼성중공업 -->
   <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
     <div class="flex items-center justify-center w-10 h-10 rounded-full border border-background bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 overflow-hidden">
-       <img src="/assets/infologo/samsung.svg" alt="Samsung Logo" class="w-full h-full object-contain p-2">
+       <img src="{{ '/assets/infologo/samsung.svg' | url }}" alt="Samsung Logo" class="w-full h-full object-contain p-2">
     </div>
     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border bg-card text-card-foreground shadow-sm">
       <div class="flex items-center justify-between space-x-2 mb-1">
@@ -72,7 +72,7 @@ Hello! I'm a passionate developer who loves building products that solve real-wo
   <!-- Item 3: 부산대 석사 -->
   <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
     <div class="flex items-center justify-center w-10 h-10 rounded-full border border-background bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 overflow-hidden">
-       <img src="/assets/infologo/pusan_univ.png" alt="PNU Logo" class="w-full h-full object-cover">
+       <img src="{{ '/assets/infologo/pusan_univ.png' | url }}" alt="PNU Logo" class="w-full h-full object-cover">
     </div>
     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border bg-card text-card-foreground shadow-sm">
       <div class="flex items-center justify-between space-x-2 mb-1">
@@ -90,7 +90,7 @@ Hello! I'm a passionate developer who loves building products that solve real-wo
   <!-- Item 4: 코드플레이스 -->
   <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
     <div class="flex items-center justify-center w-10 h-10 rounded-full border border-background bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 overflow-hidden">
-       <img src="/assets/infologo/pusan_univ.png" alt="PNU Logo" class="w-full h-full object-cover">
+       <img src="{{ '/assets/infologo/pusan_univ.png' | url }}" alt="PNU Logo" class="w-full h-full object-cover">
     </div>
     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border bg-card text-card-foreground shadow-sm">
       <div class="flex items-center justify-between space-x-2 mb-1">
@@ -109,7 +109,7 @@ Hello! I'm a passionate developer who loves building products that solve real-wo
   <!-- Item 5: 카카오 -->
   <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
     <div class="flex items-center justify-center w-10 h-10 rounded-full border border-background bg-[#FAE100] shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 overflow-hidden">
-       <img src="/assets/infologo/kakao.png" alt="Kakao Logo" class="w-full h-full object-contain p-2">
+       <img src="{{ '/assets/infologo/kakao.png' | url }}" alt="Kakao Logo" class="w-full h-full object-contain p-2">
     </div>
     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border bg-card text-card-foreground shadow-sm">
       <div class="flex items-center justify-between space-x-2 mb-1">
@@ -126,7 +126,7 @@ Hello! I'm a passionate developer who loves building products that solve real-wo
   <!-- Item 6: 부산대 학사 -->
   <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
      <div class="flex items-center justify-center w-10 h-10 rounded-full border border-background bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 overflow-hidden">
-       <img src="/assets/infologo/pusan_univ.png" alt="PNU Logo" class="w-full h-full object-cover">
+       <img src="{{ '/assets/infologo/pusan_univ.png' | url }}" alt="PNU Logo" class="w-full h-full object-cover">
     </div>
     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border bg-card text-card-foreground shadow-sm">
       <div class="flex items-center justify-between space-x-2 mb-1">

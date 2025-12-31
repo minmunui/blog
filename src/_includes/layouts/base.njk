@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title | default("My Blog") }}</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}">
     <script>
         // Check for dark mode preference
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -19,13 +19,13 @@
     <header class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex h-14 items-center w-full px-4 md:px-8">
             <div class="mr-4 hidden md:flex">
-                <a href="/" class="mr-6 flex items-center space-x-2">
+                <a href="{{ '/' | url }}" class="mr-6 flex items-center space-x-2">
                     <span class="hidden font-bold sm:inline-block">My Blog</span>
                 </a>
                 <nav class="flex items-center space-x-6 text-sm font-medium">
-                    <a href="/posts" class="transition-colors hover:text-foreground/80 text-foreground/60">Blog</a>
-                    <a href="/portfolio" class="transition-colors hover:text-foreground/80 text-foreground/60">Portfolio</a>
-                    <a href="/info" class="transition-colors hover:text-foreground/80 text-foreground/60">Info</a>
+                    <a href="{{ '/posts' | url }}" class="transition-colors hover:text-foreground/80 text-foreground/60">Blog</a>
+                    <a href="{{ '/portfolio' | url }}" class="transition-colors hover:text-foreground/80 text-foreground/60">Portfolio</a>
+                    <a href="{{ '/info' | url }}" class="transition-colors hover:text-foreground/80 text-foreground/60">Info</a>
                 </nav>
             </div>
 
@@ -49,10 +49,10 @@
         <!-- Mobile Menu Container -->
         <div id="mobile-menu" class="hidden md:hidden border-t bg-background">
             <div class="container py-2 grid gap-1 text-lg">
-                <a href="/" class="flex items-center font-medium hover:underline">Home</a>
-                <a href="/posts" class="flex items-center font-medium hover:underline">Blog</a>
-                <a href="/portfolio" class="flex items-center font-medium hover:underline">Portfolio</a>
-                <a href="/info" class="flex items-center font-medium hover:underline">Info</a>
+                <a href="{{ '/' | url }}" class="flex items-center font-medium hover:underline">Home</a>
+                <a href="{{ '/posts' | url }}" class="flex items-center font-medium hover:underline">Blog</a>
+                <a href="{{ '/portfolio' | url }}" class="flex items-center font-medium hover:underline">Portfolio</a>
+                <a href="{{ '/info' | url }}" class="flex items-center font-medium hover:underline">Info</a>
             </div>
         </div>
     </header>
