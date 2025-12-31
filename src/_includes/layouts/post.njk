@@ -1,0 +1,96 @@
+---
+layout: layouts/base.njk
+---
+
+<article class="max-w-6xl mx-auto py-6 lg:py-12 px-2 md:px-4">
+  <div class="space-y-4">
+    <h1 class="inline-block font-bold text-4xl lg:text-5xl tracking-tight md:leading-tight">{{ title }}</h1>
+    {% if description %}
+      <p class="text-xl text-muted-foreground">{{ description }}</p>
+    {% endif %}
+    <div class="flex space-x-4 text-sm text-muted-foreground">
+        <div>
+            <time datetime="{{ date | dateIso }}">{{ date | dateReadable }}</time>
+            {% if lastModified and lastModified != date %}
+                <span class="text-muted-foreground/60 ml-2">• Updated: <time datetime="{{ lastModified | dateIso }}">{{ lastModified | dateReadable }}</time></span>
+            {% endif %}
+        </div>
+        {% if tags %}
+        <div class="flex space-x-2">
+            {% for tag in tags %}
+                {% if tag != "posts" %}
+                    <span class="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">{{ tag }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+  </div>
+  <hr class="my-8 lg:my-10" />
+  <div class="prose dark:prose-invert max-w-none">
+    {{ content | safe }}
+  </div>
+
+  <hr class="my-8" />
+  
+  <div class="flex flex-col md:flex-row justify-between gap-4 pt-4">
+    {% set previousPost = collections.posts | getPreviousCollectionItem(page) %}
+    {% set nextPost = collections.posts | getNextCollectionItem(page) %}
+
+    <div class="flex-1">
+      {% if previousPost %}
+        <a href="{{ previousPost.url }}" class="group flex flex-col space-y-1 rounded-lg border p-4 transition-colors hover:bg-muted/50 text-left">
+          <span class="text-xs text-muted-foreground group-hover:text-foreground">Previous</span>
+          <span class="font-medium truncate">{{ previousPost.data.title }}</span>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="flex-1 text-right">
+      {% if nextPost %}
+        <a href="{{ nextPost.url }}" class="group flex flex-col space-y-1 rounded-lg border p-4 transition-colors hover:bg-muted/50 text-right">
+          <span class="text-xs text-muted-foreground group-hover:text-foreground">Next</span>
+          <span class="font-medium truncate">{{ nextPost.data.title }}</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</article>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const contentArea = document.querySelector('.prose');
+    
+    // Add visual cue
+    const images = document.querySelectorAll('.prose img');
+    images.forEach(img => img.style.cursor = 'zoom-in');
+
+    if (contentArea && typeof Viewer !== 'undefined') {
+      new Viewer(contentArea, {
+        toolbar: {
+          zoomIn: 1,
+          zoomOut: 1,
+          oneToOne: 1,
+          reset: 1,
+          prev: 1,
+          play: {
+            show: 1,
+            size: 'large',
+          },
+          next: 1,
+          rotateLeft: 1,
+          rotateRight: 1,
+          flipHorizontal: 1,
+          flipVertical: 1,
+        },
+        title: false,
+        transition: true,
+      });
+      console.log('Viewer.js initialized');
+    } else {
+        console.error('Viewer.js failed to initialize: contentArea or Viewer missing');
+    }
+  });
+</script>
