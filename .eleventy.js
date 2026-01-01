@@ -81,14 +81,18 @@ module.exports = function (eleventyConfig) {
              
              let embedUrl = href;
              if (href.includes('maps.app.goo.gl')) {
-                 // For shortened URLs, we might need to rely on the user providing the full embed link or try a simple replace (risky)
-                 // Or just trusting the user to put the embedbable link.
-                 embedUrl = href.replace('maps.app.goo.gl', 'google.com/maps/embed?pb=').replace('/maps/', '/maps/embed/');
+                 // Do NOT try to convert short links manually as it causes 'Refused to connect'.
+                 // Users should use the full embed URL provided by Google.
+                 // We will just wrap it.
+                 embedUrl = href;
              } else {
-                 embedUrl = href.replace('/maps/', '/maps/embed/');
+                 // For standard map URLs, we assume the user might have copied a link instead of embed code.
+                 // But without a key, we can't reliably convert.
+                 // Trust the user provided an embeddable link if they used [embed].
+                 embedUrl = href;
              }
              
-             return `<div class="aspect-video w-full rounded-xl overflow-hidden shadow-lg my-4"><iframe src="${embedUrl}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div>`;
+             return `<div class="aspect-video w-full max-w-[600px] mx-auto rounded-xl overflow-hidden shadow-lg my-4"><iframe src="${embedUrl}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div>`;
         }
         
         // 2. YouTube
@@ -151,19 +155,19 @@ module.exports = function (eleventyConfig) {
                   
                   const cardHtml = `
                     <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group">
-                        <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col md:flex-row h-auto md:h-32">
-                            <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                        <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col md:flex-row h-auto md:h-32 max-w-full">
+                            <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden min-w-0">
                                 <div>
-                                    <h3 class="font-semibold text-base line-clamp-1 group-hover:text-primary transition-colors">${title}</h3>
-                                    <p class="text-sm text-muted-foreground line-clamp-2 mt-1">${description}</p>
+                                    <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors">${title}</h3>
+                                    <p class="text-sm text-muted-foreground line-clamp-2 mt-1 break-words">${description}</p>
                                 </div>
                                 <div class="flex items-center gap-2 mt-2">
-                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4" alt="">` : ''}
-                                    <span class="text-xs text-muted-foreground">${siteName}</span>
+                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0" alt="">` : ''}
+                                    <span class="text-xs text-muted-foreground truncate">${siteName}</span>
                                 </div>
                             </div>
                             ${image ? `
-                            <div class="w-full md:w-48 h-32 md:h-full bg-muted shrink-0">
+                            <div class="w-full md:w-48 h-48 md:h-32 bg-muted shrink-0 overflow-hidden">
                                 <img src="${image}" alt="${title}" class="w-full h-full object-cover">
                             </div>
                             ` : ''}
