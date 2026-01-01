@@ -92,7 +92,8 @@ module.exports = function (eleventyConfig) {
         // 2. YouTube
         if (text === 'video' && (href.includes('youtube.com') || href.includes('youtu.be'))) {
              tokens[idx].hidden = true;
-             nextToken.hidden = true;       // text "video" (CRITICAL FIX)
+             nextToken.hidden = true; 
+             nextToken.content = ""; // Ensure content is empty just in case hidden doesn't work for some renderer quirk
              tokens[idx+2].hidden = true;
              
              let videoId = '';
@@ -148,21 +149,21 @@ module.exports = function (eleventyConfig) {
                   const siteName = result.ogSiteName || new URL(m.url).hostname;
                   
                   const cardHtml = `
-                    <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group max-w-full">
+                    <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group max-w-full not-prose">
                         <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col sm:flex-row h-auto sm:h-32 w-full bg-card">
                             <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden min-w-0">
                                 <div class="min-w-0">
-                                    <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors pr-1">${title}</h3>
-                                    <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words">${description}</p>
+                                    <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors pr-1 m-0">${title}</h3>
+                                    <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words m-0">${description}</p>
                                 </div>
                                 <div class="flex items-center gap-2 mt-2 min-w-0">
-                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0" alt="">` : ''}
-                                    <span class="text-xs text-muted-foreground truncate">${siteName}</span>
+                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0 m-0" alt="">` : ''}
+                                    <span class="text-xs text-muted-foreground truncate m-0">${siteName}</span>
                                 </div>
                             </div>
                             ${image ? `
                             <div class="sm:w-40 h-48 sm:h-auto bg-muted shrink-0 border-t sm:border-t-0 sm:border-l relative">
-                                <img src="${image}" alt="${title}" class="absolute inset-0 w-full h-full object-cover">
+                                <img src="${image}" alt="${title}" class="absolute inset-0 w-full h-full object-cover m-0">
                             </div>
                             ` : ''}
                         </div>
