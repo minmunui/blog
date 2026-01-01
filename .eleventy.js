@@ -75,20 +75,14 @@ module.exports = function (eleventyConfig) {
         // 1. Google Maps
         if (text === 'embed' && (href.includes('maps.app.goo.gl') || href.includes('google.com/maps'))) {
              // We need to consume the next 2 tokens (text + link_close) to not render them
-             tokens[idx].hidden = true;
-             tokens[idx+1].hidden = true;
-             tokens[idx+2].hidden = true;
+             tokens[idx].hidden = true;     // link_open
+             nextToken.hidden = true;       // text "embed" (CRITICAL FIX: this was missing before or not working if processed late)
+             tokens[idx+2].hidden = true;   // link_close
              
              let embedUrl = href;
              if (href.includes('maps.app.goo.gl')) {
-                 // Do NOT try to convert short links manually as it causes 'Refused to connect'.
-                 // Users should use the full embed URL provided by Google.
-                 // We will just wrap it.
                  embedUrl = href;
              } else {
-                 // For standard map URLs, we assume the user might have copied a link instead of embed code.
-                 // But without a key, we can't reliably convert.
-                 // Trust the user provided an embeddable link if they used [embed].
                  embedUrl = href;
              }
              
@@ -98,7 +92,7 @@ module.exports = function (eleventyConfig) {
         // 2. YouTube
         if (text === 'video' && (href.includes('youtube.com') || href.includes('youtu.be'))) {
              tokens[idx].hidden = true;
-             tokens[idx+1].hidden = true;
+             nextToken.hidden = true;       // text "video" (CRITICAL FIX)
              tokens[idx+2].hidden = true;
              
              let videoId = '';
@@ -154,21 +148,21 @@ module.exports = function (eleventyConfig) {
                   const siteName = result.ogSiteName || new URL(m.url).hostname;
                   
                   const cardHtml = `
-                    <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group">
-                        <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col md:flex-row h-auto md:h-32 max-w-full">
+                    <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group max-w-full">
+                        <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col sm:flex-row h-auto sm:h-32 w-full bg-card">
                             <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden min-w-0">
-                                <div>
-                                    <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors">${title}</h3>
-                                    <p class="text-sm text-muted-foreground line-clamp-2 mt-1 break-words">${description}</p>
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors pr-1">${title}</h3>
+                                    <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words">${description}</p>
                                 </div>
-                                <div class="flex items-center gap-2 mt-2">
+                                <div class="flex items-center gap-2 mt-2 min-w-0">
                                     ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0" alt="">` : ''}
                                     <span class="text-xs text-muted-foreground truncate">${siteName}</span>
                                 </div>
                             </div>
                             ${image ? `
-                            <div class="w-full md:w-48 h-48 md:h-32 bg-muted shrink-0 overflow-hidden">
-                                <img src="${image}" alt="${title}" class="w-full h-full object-cover">
+                            <div class="sm:w-40 h-48 sm:h-auto bg-muted shrink-0 border-t sm:border-t-0 sm:border-l relative">
+                                <img src="${image}" alt="${title}" class="absolute inset-0 w-full h-full object-cover">
                             </div>
                             ` : ''}
                         </div>
