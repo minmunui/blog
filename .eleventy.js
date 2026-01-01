@@ -115,18 +115,7 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.setLibrary("md", mdLib);
 
-  return {
-    dir: {
-      input: "src",
-      output: "_site",
-      includes: "_includes",
-    },
-    templateFormats: ["md", "njk", "html"],
-    markdownTemplateEngine: "njk",
-    htmlTemplateEngine: "njk",
-    pathPrefix: process.env.GO_LIVE ? "/blog/" : "/",
-  };
-};
+
 
   // Async Transform for [bookmark](url)
   // Replaces <p><a href="url">[bookmark]</a></p> with a preview card
