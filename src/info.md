@@ -7,19 +7,16 @@ image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fi
 visible: true
 ---
 
-Hello! I'm a passionate developer who loves building products that solve real-world problems. I specialize in web technologies and modern frontend frameworks.
-
 ## 📬 Contact
 
-- **Email**: hello@example.com
-- **GitHub**: [github.com/example](https://github.com)
-- **Twitter**: [@example](https://twitter.com)
+- **Email**: ehdwls1638@gmail.com
+- **GitHub**: [https://www.github.com/minmunui](https://github.com/minmunui)
+
 
 ## 🛠 Skills
 
 - **Frontend**: React, Vue, Next.js, Tailwind CSS
-- **Backend**: Node.js, Python, Firebase
-- **Tools**: Git, Docker, Figma
+- **Backend**: Django, FastAPI
 
 ## ⏳ Timeline
 
