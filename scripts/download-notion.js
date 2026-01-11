@@ -86,7 +86,7 @@ layout: layouts/post.njk
 
 async function main() {
   if (!NOTION_TOKEN) {
-    console.error("Error: NOTION_TOKEN is missing in .env file.");
+    console.error("Error: NOTION_TOKEN is missing. Check .env file or GitHub Secrets.");
     process.exit(1);
   }
 
