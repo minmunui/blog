@@ -17,6 +17,11 @@ title: Home
       <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div class="p-6 flex flex-col gap-4 h-full">
             <div class="flex flex-col gap-1">
+                 {% if post.data.thumbnail %}
+                    <div class="aspect-video w-full overflow-hidden rounded-md mb-4">
+                        <img src="{{ post.data.thumbnail }}" alt="{{ post.data.title }}" class="object-cover w-full h-full transition-transform hover:scale-105" />
+                    </div>
+                 {% endif %}
                  <h3 class="text-2xl font-semibold leading-none tracking-tight">
                     <a href="{{ post.url | url }}" class="hover:underline">{{ post.data.title }}</a>
                  </h3>

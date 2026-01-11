@@ -64,8 +64,15 @@ async function convertToMarkdown(page) {
     const dateProp = page.properties['연동일시']?.date?.start || page.properties['생성 일시']?.created_time || page.created_time;
     const date = new Date(dateProp).toISOString();
     const description = page.properties['요약']?.rich_text[0]?.plain_text || "";
+    // Tags -> 태그
     const tags = page.properties['태그']?.multi_select?.map(tag => tag.name) || [];
+    
+    // Category -> 카테고리
     const category = page.properties['카테고리']?.select?.name || "Uncategorized";
+
+    // Thumbnail -> 썸네일 (URL type)
+    const thumbnail = page.properties['썸네일']?.url || "";
+    
     const lastModified = page.last_edited_time ? new Date(page.last_edited_time).toISOString() : date;
     
     const frontmatter = `---
@@ -75,6 +82,7 @@ lastModified: ${lastModified}
 description: "${description}"
 tags: [${tags.map(t => `"${t}"`).join(", ")}]
 category: "${category}"
+thumbnail: "${thumbnail}"
 visible: true
 layout: layouts/post.njk
 ---
