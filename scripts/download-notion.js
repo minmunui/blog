@@ -1,49 +1,73 @@
 require("dotenv").config();
-const { Client } = require("@notionhq/client");
 const { NotionToMarkdown } = require("notion-to-md");
 const fs = require("fs");
 const path = require("path");
 
-// Initialize Notion Client
-const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
-});
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
-// Pass custom transformers if needed
-const n2m = new NotionToMarkdown({ notionClient: notion });
+// Custom Fetch Helper
+async function notionFetch(endpoint, method = "GET", body = null) {
+  const url = `https://api.notion.com/v1/${endpoint}`;
+  const options = {
+    method,
+    headers: {
+      "Authorization": `Bearer ${NOTION_TOKEN}`,
+      "Notion-Version": "2022-06-28",
+      "Content-Type": "application/json",
+    },
+  };
+  if (body) options.body = JSON.stringify(body);
+  
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Notion API Error ${res.status}: ${text}`);
+  }
+  return res.json();
+}
 
-// Database ID from env
-const databaseId = process.env.NOTION_DATABASE_ID;
+// Custom Client for notion-to-md
+const customClient = {
+  blocks: {
+    children: {
+      list: async ({ block_id }) => {
+        return notionFetch(`blocks/${block_id}/children?page_size=100`);
+      }
+    }
+  }
+};
+
+// Initialize NotionToMarkdown with custom client
+const n2m = new NotionToMarkdown({ notionClient: customClient });
 
 async function getBlogPosts() {
-  console.log("Fetching posts from Notion...");
-  const response = await notion.databases.query({
-    database_id: databaseId,
-    filter: {
-      property: "Status",
-      status: {
-        equals: "Published", // Only fetch published posts
+  console.log("Fetching posts from Notion via Custom Fetch...");
+  const response = await notionFetch(`databases/${NOTION_DATABASE_ID}/query`, "POST", {
+      filter: {
+        property: "작성상태",
+        status: {
+            equals: "작성 완료",
+        },
       },
-    },
   });
-
   return response.results;
 }
 
 async function convertToMarkdown(page) {
+    // notion-to-md uses the customClient we passed
     const mdblocks = await n2m.pageToMarkdown(page.id);
     const mdString = n2m.toMarkdownString(mdblocks);
     
-    // Extract metadata from properties (Adjust these based on your Notion DB schema)
-    const title = page.properties.Name?.title[0]?.plain_text || "Untitled";
-    // Use ISO string for date to preserve full timestamp info
-    const date = page.properties.Date?.date?.start ? new Date(page.properties.Date.date.start).toISOString() : new Date().toISOString();
-    const description = page.properties.Description?.rich_text[0]?.plain_text || "";
-    const tags = page.properties.Tags?.multi_select?.map(tag => tag.name) || [];
-    const category = page.properties.Category?.select?.name || "Uncategorized";
+    // Extract metadata
+    const title = page.properties['이름']?.title[0]?.plain_text || "Untitled";
+    const dateProp = page.properties['연동일시']?.date?.start || page.properties['생성 일시']?.created_time || page.created_time;
+    const date = new Date(dateProp).toISOString();
+    const description = page.properties['요약']?.rich_text[0]?.plain_text || "";
+    const tags = page.properties['태그']?.multi_select?.map(tag => tag.name) || [];
+    const category = page.properties['카테고리']?.select?.name || "Uncategorized";
     const lastModified = page.last_edited_time ? new Date(page.last_edited_time).toISOString() : date;
     
-    // Create Front Matter
     const frontmatter = `---
 title: "${title}"
 date: ${date}
@@ -61,24 +85,32 @@ layout: layouts/post.njk
 }
 
 async function main() {
-  if (!process.env.NOTION_TOKEN || !process.env.NOTION_DATABASE_ID) {
-    console.error("Error: NOTION_TOKEN or NOTION_DATABASE_ID is missing in .env file.");
+  if (!NOTION_TOKEN) {
+    console.error("Error: NOTION_TOKEN is missing in .env file.");
     process.exit(1);
   }
 
-  const posts = await getBlogPosts();
-  console.log(`Found ${posts.length} posts.`);
+  try {
+    const posts = await getBlogPosts();
+    console.log(`Found ${posts.length} posts.`);
 
-  for (const post of posts) {
-    const mdContent = await convertToMarkdown(post);
-    const title = post.properties.Name?.title[0]?.plain_text || "Untitled";
-    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    
-    const fileName = `${slug}.md`;
-    const filePath = path.join(__dirname, "../src/posts", fileName);
-    
-    fs.writeFileSync(filePath, mdContent);
-    console.log(`Generated: ${fileName}`);
+    for (const post of posts) {
+      console.log(`Processing: ${post.id}`);
+      const mdContent = await convertToMarkdown(post);
+      
+      const title = post.properties['이름']?.title[0]?.plain_text || "Untitled";
+      // Sanitize filename
+      const slug = title.trim().toLowerCase().replace(/[^a-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]+/g, "-").replace(/(^-|-$)/g, "") || "untitled";
+      
+      const fileName = `${slug}.md`;
+      const filePath = path.join(__dirname, "../src/posts", fileName);
+      
+      fs.writeFileSync(filePath, mdContent);
+      console.log(`Generated: ${fileName}`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    process.exit(1);
   }
 }
 
