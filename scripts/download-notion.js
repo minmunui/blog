@@ -99,6 +99,7 @@ async function main() {
   }
 
   try {
+    console.log(`Using Database ID: ${NOTION_DATABASE_ID}`);
     const posts = await getBlogPosts();
     console.log(`Found ${posts.length} posts.`);
 
@@ -112,6 +113,9 @@ async function main() {
       
       const fileName = `${slug}.md`;
       const filePath = path.join(__dirname, "../src/posts", fileName);
+      
+      // Ensure directory exists
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
       
       fs.writeFileSync(filePath, mdContent);
       console.log(`Generated: ${fileName}`);
