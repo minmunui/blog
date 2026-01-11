@@ -7,6 +7,9 @@ module.exports = function (eleventyConfig) {
   // Plugins
   eleventyConfig.addPlugin(syntaxHighlight);
 
+  // Ignore .gitignore (required since we gitignore the generated posts)
+  eleventyConfig.setUseGitIgnore(false);
+
   // Passthrough Copy
   eleventyConfig.addPassthroughCopy("src/assets");
 
