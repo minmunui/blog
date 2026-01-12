@@ -228,6 +228,34 @@ n2m.setCustomTransformer("numbered_list_item", async (block) => {
     return `1. ${colorize(block.numbered_list_item.rich_text)}`;
 });
 
+// Column Spprt
+n2m.setCustomTransformer("column_list", async (block) => {
+    // Get children (columns)
+    const { results: columns } = await notionFetch(`blocks/${block.id}/children`);
+    
+    let html = `<div class="notion-column-list flex flex-col md:flex-row gap-4 w-full my-4">`;
+    
+    for (const column of columns) {
+         // Recursive: Get MD for content inside the column
+         const contentBlocks = await n2m.pageToMarkdown(column.id);
+         const contentMd = n2m.toMarkdownString(contentBlocks).parent;
+         
+         html += `<div class="notion-column flex-1 min-w-0">${contentMd}</div>`;
+    }
+    
+    html += `</div>`;
+    return html;
+});
+
+n2m.setCustomTransformer("column", async (block) => {
+    // Should be handled by column_list, but if called directly, return content
+    // However, since we handle recursion in column_list, this might not be reached
+    // UNLESS n2m traverses it.
+    // If we return undefined, n2m uses default.
+    // We return empty string because we handle the content in column_list
+    return ""; 
+});
+
 async function convertToMarkdown(page) {
     const mdblocks = await n2m.pageToMarkdown(page.id);
     const mdString = n2m.toMarkdownString(mdblocks);
