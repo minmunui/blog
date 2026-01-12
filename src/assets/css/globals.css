@@ -98,6 +98,17 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   .prose img {
     @apply mx-auto block my-4;
   }
+
+  .prose blockquote[class*="notion-"] {
+    @apply not-italic border-l-0 p-4 rounded-lg my-4;
+  }
+  .prose blockquote[class*="notion-"] p {
+    @apply my-0;
+  }
+  .prose blockquote[class*="notion-"] p::before,
+  .prose blockquote[class*="notion-"] p::after {
+    content: none;
+  }
 }
 
 @layer utilities {
