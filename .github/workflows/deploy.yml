@@ -5,6 +5,10 @@ on:
     branches:
       - main
   workflow_dispatch: # Allows manual run
+  repository_dispatch: # Allows API remote run
+    types: [deploy_blog]
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight UTC
 
 permissions:
   contents: read
