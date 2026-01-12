@@ -123,13 +123,7 @@ module.exports = function (eleventyConfig) {
   // Replaces <p><a href="url">[bookmark]</a></p> with a preview card
   eleventyConfig.addTransform("bookmarks", async function(content) {
     if( this.page.outputPath && this.page.outputPath.endsWith(".html") ) {
-      // Find all links that look like [bookmark]
-      // Markdown usually renders [bookmark](url) as <p><a href="url">bookmark</a></p> or just <a href="url">bookmark</a>
-      
       const bookmarkRegex = /<p>\s*<a\s+href="([^"]+)">\s*\[?bookmark\]?\s*<\/a>\s*<\/p>/g;
-      // Also match without [ ] if user just wrote "bookmark" as text, but specific request was [bookmark](url) which renders as link text "bookmark"
-      // Wait, markdown: [bookmark](url) -> <a href="url">bookmark</a>.
-      // If it's on its own line, it's usually wrapped in <p>.
       
       let matches = [];
       let match;
@@ -141,7 +135,6 @@ module.exports = function (eleventyConfig) {
       }
       
       if (matches.length > 0) {
-          // Process all bookmarks efficiently
           for (const m of matches) {
               try {
                   const { result } = await ogs({ url: m.url });
@@ -150,68 +143,73 @@ module.exports = function (eleventyConfig) {
                   const description = result.ogDescription || result.twitterDescription || "";
                   const image = result.ogImage?.[0]?.url || result.twitterImage?.[0]?.url || "";
                   const siteName = result.ogSiteName || new URL(m.url).hostname;
+                  const favicon = result.favicon; // Use ogs favicon if available
                   
+                  // New Design: Robust Flexbox Card
+                  // Uses internal styles for images to guarantee no margin interference
                   const cardHtml = `
-                    <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group max-w-full not-prose">
-                        <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col sm:flex-row h-auto sm:h-32 w-full bg-card">
-                            <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden min-w-0">
-                                <div class="min-w-0">
-                                    <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors pr-1 m-0">${title}</h3>
-                                    <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words m-0">${description}</p>
+                    <div class="not-prose my-6 w-full">
+                        <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block no-underline group bg-card border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors">
+                            <div class="flex flex-col sm:flex-row h-auto sm:h-32">
+                                <div class="flex-1 p-4 flex flex-col justify-between overflow-hidden">
+                                    <div>
+                                        <h3 class="font-semibold text-base truncate m-0 group-hover:text-primary transition-colors">${title}</h3>
+                                        <p class="text-sm text-muted-foreground line-clamp-2 mt-1 m-0">${description}</p>
+                                    </div>
+                                    <div class="flex items-center gap-2 mt-2">
+                                        ${favicon ? `<img src="${favicon}" alt="" style="width: 16px; height: 16px; margin: 0 !important; display: block;" />` : ''}
+                                        <span class="text-xs text-muted-foreground truncate m-0">${siteName}</span>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-2 mt-2 min-w-0">
-                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0 !m-0" alt="">` : ''}
-                                    <span class="text-xs text-muted-foreground truncate m-0">${siteName}</span>
+                                ${image ? `
+                                <div class="sm:w-40 h-48 sm:h-auto shrink-0 relative border-t sm:border-t-0 sm:border-l bg-muted">
+                                    <img src="${image}" alt="${title}" class="absolute inset-0 w-full h-full object-cover" style="margin: 0 !important; display: block;" />
                                 </div>
+                                ` : ''}
                             </div>
-                            ${image ? `
-                            <div class="sm:w-40 h-48 sm:h-auto bg-muted shrink-0 border-t sm:border-t-0 sm:border-l relative">
-                                <img src="${image}" alt="${title}" class="absolute inset-0 w-full h-full object-cover m-0">
-                            </div>
-                            ` : ''}
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                   `;
                   
                   content = content.replace(m.fullMatch, cardHtml);
               } catch (e) {
-                  // Fallback for YouTube or general failures
+                  // Fallback for YouTube or errors
                   console.error(`Error fetching OG data for ${m.url}:`, e.message);
                   
-                  if (m.url.includes('youtube.com') || m.url.includes('youtu.be')) {
-                      // Manual construction for YouTube if OGS fails (likely 429 or consent wall)
-                      const videoId = m.url.includes('youtu.be') ? m.url.split('youtu.be/')[1].split('?')[0] : (m.url.split('v=')[1] ? m.url.split('v=')[1].split('&')[0] : '');
-                      if (videoId) {
-                          const thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-                          const fallbackHtml = `
-                            <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group max-w-full not-prose">
-                                <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col sm:flex-row h-auto sm:h-32 w-full bg-card">
-                                    <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden min-w-0">
-                                        <div class="min-w-0">
-                                            <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors pr-1 m-0">Watch on YouTube</h3>
-                                            <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words m-0">${m.url}</p>
+                   if (m.url.includes('youtube.com') || m.url.includes('youtu.be')) {
+                       // Manual construction for YouTube
+                       const videoId = m.url.includes('youtu.be') ? m.url.split('youtu.be/')[1].split('?')[0] : (m.url.split('v=')[1] ? m.url.split('v=')[1].split('&')[0] : '');
+                       if (videoId) {
+                           const thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                           const fallbackHtml = `
+                            <div class="not-prose my-6 w-full">
+                                <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block no-underline group bg-card border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors">
+                                    <div class="flex flex-col sm:flex-row h-auto sm:h-32">
+                                        <div class="flex-1 p-4 flex flex-col justify-between overflow-hidden">
+                                            <div>
+                                                <h3 class="font-semibold text-base truncate m-0 group-hover:text-primary transition-colors">Watch on YouTube</h3>
+                                                <p class="text-sm text-muted-foreground line-clamp-2 mt-1 m-0">${m.url}</p>
+                                            </div>
+                                            <div class="flex items-center gap-2 mt-2">
+                                                <img src="https://www.youtube.com/s/desktop/1cd3b66d/img/favicon.ico" alt="" style="width: 16px; height: 16px; margin: 0 !important; display: block;" />
+                                                <span class="text-xs text-muted-foreground truncate m-0">YouTube</span>
+                                            </div>
                                         </div>
-                                        <div class="flex items-center gap-2 mt-2 min-w-0">
-                                            <span class="text-xs text-muted-foreground truncate m-0">YouTube</span>
+                                        <div class="sm:w-40 h-48 sm:h-auto shrink-0 relative border-t sm:border-t-0 sm:border-l bg-muted">
+                                            <img src="${thumb}" alt="YouTube Thumbnail" class="absolute inset-0 w-full h-full object-cover" style="margin: 0 !important; display: block;" />
                                         </div>
                                     </div>
-                                    <div class="sm:w-40 h-48 sm:h-auto bg-muted shrink-0 border-t sm:border-t-0 sm:border-l relative">
-                                        <img src="${thumb}" alt="YouTube Thumbnail" class="absolute inset-0 w-full h-full object-cover m-0">
-                                    </div>
-                                </div>
-                            </a>
-                          `;
-                          content = content.replace(m.fullMatch, fallbackHtml);
-                          continue; // Skip the rest of loop
-                      }
-                  }
-                  
-                  // content = content.replace(m.fullMatch, `<p><a href="${m.url}" class="text-red-500">Failed to load bookmark: ${m.url}</a></p>`);
+                                </a>
+                            </div>
+                           `;
+                           content = content.replace(m.fullMatch, fallbackHtml);
+                           continue;
+                       }
+                   }
               }
           }
       }
     }
-
     return content;
   });
 
