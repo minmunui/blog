@@ -106,8 +106,30 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     @apply !my-0;
   }
   .prose blockquote[class*="notion-"] p::before,
-  .prose blockquote[class*="notion-"] p::after {
+  .prose blockquote[class*="notion-"] p::after,
+  .prose blockquote[class*="notion-"]::before,
+  .prose blockquote[class*="notion-"]::after {
     content: none !important;
+  }
+
+  /* New Callout Structure */
+  .callout-icon-text {
+    @apply flex items-start gap-3;
+  }
+  .callout-icon {
+    @apply flex-shrink-0 select-none;
+  }
+  .callout-text {
+    @apply flex-1;
+  }
+  .callout-children {
+    @apply mt-4 pl-8 text-[0.95em] leading-[1.6];
+  }
+  .callout-children p {
+    @apply !mb-2;
+  }
+  .callout-children p:last-child {
+    @apply !mb-0;
   }
 }
 

@@ -218,15 +218,38 @@ n2m.setCustomTransformer("quote", async (block) => {
 });
 
 // Callout
+// Callout
 n2m.setCustomTransformer("callout", async (block) => {
     const { color } = block.callout;
     const icon = block.callout.icon?.emoji || "💡";
-    const text = colorize(block.callout.rich_text);
+    const text = colorize(block.callout.rich_text); // Only the first line if it's the parent text
+
+    // Fetch children if any
+    let childrenHtml = "";
+    if (block.has_children) {
+        const children = await n2m.pageToMarkdown(block.id);
+        const childrenMd = n2m.toMarkdownString(children).parent;
+        // Render markdown to HTML
+        childrenHtml = md.render(childrenMd);
+    }
+    
+    // Combine parent text + children
+    // The parent text in callout is usually just text. We can wrap it in a p or span or just append.
+    // If has children, the parent text acts as the first paragraph/line.
+    
     if (color && color !== 'default') {
          const className = `notion-${color.replace('_', '-')}`;
-         return `<blockquote class="${className}"> ${icon} ${text}</blockquote>`;
+         return `<blockquote class="${className}">
+            <div class="callout-content">
+                <div class="callout-icon-text">
+                    <span class="callout-icon">${icon}</span>
+                    <span class="callout-text">${text}</span>
+                </div>
+                ${childrenHtml ? `<div class="callout-children">${childrenHtml}</div>` : ''}
+            </div>
+         </blockquote>`;
     }
-    return `> ${icon} ${text}`;
+    return `> ${icon} ${text} \n\n ${childrenHtml}`;
 });
 
 // Lists
