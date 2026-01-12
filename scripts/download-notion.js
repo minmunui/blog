@@ -126,16 +126,20 @@ const colorize = (textArr) => {
             if (text.annotations.underline) md = `<u>${md}</u>`;
             
             if (text.annotations.color && text.annotations.color !== 'default') {
-                const colorMap = {
-                    "gray": "gray", "brown": "brown", "orange": "orange", "yellow": "orange", "green": "green", "blue": "blue", "purple": "purple", "pink": "pink", "red": "red",
-                    "gray_background": "background-color: #ebeced", "brown_background": "background-color: #e9e5e3", "orange_background": "background-color: #faebdd", 
-                    "yellow_background": "background-color: #fbf3db", "green_background": "background-color: #ddedea", "blue_background": "background-color: #e6f3f7", 
-                    "purple_background": "background-color: #f6f3f9", "pink_background": "background-color: #fbf2f5", "red_background": "background-color: #fbe4e4",
-                };
-                const style = colorMap[text.annotations.color] || text.annotations.color;
-                const isBg = text.annotations.color.includes('_background');
-                const styleAttr = isBg ? style : `color: ${style}`;
-                md = `<span style="${styleAttr}">${md}</span>`;
+                const color = text.annotations.color;
+                // Notion colors often include _background suffix for bg colors
+                // Our CSS classes are .notion-[color] and .notion-[color]-background
+                // If it is a background color, Notion sends e.g., "blue_background"
+                // Our class is .notion-blue-background.
+                // If it is text color, Notion sends "blue"
+                // Our class is .notion-blue.
+                
+                // We can directly map the notion color string to our class name format
+                // Notion: "blue" -> Class: "notion-blue"
+                // Notion: "blue_background" -> Class: "notion-blue-background"
+                
+                const className = `notion-${color.replace('_', '-')}`;
+                md = `<span class="${className}">${md}</span>`;
             }
         }
         

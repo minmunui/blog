@@ -26,6 +26,27 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
     --radius: 0.5rem;
+    
+    /* Notion Colors (Light Mode) */
+    --notion-gray: 120 120 120;
+    --notion-brown: 140 80 50;
+    --notion-orange: 210 100 40;
+    --notion-yellow: 200 140 0;
+    --notion-green: 0 120 60;
+    --notion-blue: 0 100 200;
+    --notion-purple: 120 60 200;
+    --notion-pink: 200 60 140;
+    --notion-red: 210 50 50;
+
+    --notion-gray-bg: 241 241 239;
+    --notion-brown-bg: 244 238 238;
+    --notion-orange-bg: 251 236 221;
+    --notion-yellow-bg: 251 243 219;
+    --notion-green-bg: 237 243 236;
+    --notion-blue-bg: 231 243 248;
+    --notion-purple-bg: 244 240 247;
+    --notion-pink-bg: 249 238 243;
+    --notion-red-bg: 253 235 236;
   }
 
   .dark {
@@ -48,7 +69,51 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+
+    /* Notion Colors (Dark Mode) - Adjusted for contrast */
+    --notion-gray: 180 180 180;
+    --notion-brown: 200 160 140; /* Lighter brown */
+    --notion-orange: 255 170 100; /* Pastel orange */
+    --notion-yellow: 255 220 100; /* Pastel yellow */
+    --notion-green: 100 220 150; /* Pastel green */
+    --notion-blue: 100 180 255; /* Light blue */
+    --notion-purple: 180 140 255; /* Lighter purple */
+    --notion-pink: 255 140 200; /* Lighter pink */
+    --notion-red: 255 120 120; /* Light red */
+
+    /* Dark Mode Backgrounds - Darker and more translucent feel */
+    --notion-gray-bg: 45 45 45; 
+    --notion-brown-bg: 70 50 40;
+    --notion-orange-bg: 80 50 20;
+    --notion-yellow-bg: 80 70 20;
+    --notion-green-bg: 30 60 40;
+    --notion-blue-bg: 30 50 70;
+    --notion-purple-bg: 50 30 70;
+    --notion-pink-bg: 70 30 50;
+    --notion-red-bg: 80 30 30;
   }
+}
+
+@layer utilities {
+  .notion-gray { color: rgb(var(--notion-gray)); }
+  .notion-brown { color: rgb(var(--notion-brown)); }
+  .notion-orange { color: rgb(var(--notion-orange)); }
+  .notion-yellow { color: rgb(var(--notion-yellow)); }
+  .notion-green { color: rgb(var(--notion-green)); }
+  .notion-blue { color: rgb(var(--notion-blue)); }
+  .notion-purple { color: rgb(var(--notion-purple)); }
+  .notion-pink { color: rgb(var(--notion-pink)); }
+  .notion-red { color: rgb(var(--notion-red)); }
+
+  .notion-gray-background { background-color: rgb(var(--notion-gray-bg)); }
+  .notion-brown-background { background-color: rgb(var(--notion-brown-bg)); }
+  .notion-orange-background { background-color: rgb(var(--notion-orange-bg)); }
+  .notion-yellow-background { background-color: rgb(var(--notion-yellow-bg)); }
+  .notion-green-background { background-color: rgb(var(--notion-green-bg)); }
+  .notion-blue-background { background-color: rgb(var(--notion-blue-bg)); }
+  .notion-purple-background { background-color: rgb(var(--notion-purple-bg)); }
+  .notion-pink-background { background-color: rgb(var(--notion-pink-bg)); }
+  .notion-red-background { background-color: rgb(var(--notion-red-bg)); }
 }
 
 @layer base {
