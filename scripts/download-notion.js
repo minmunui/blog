@@ -234,18 +234,18 @@ n2m.setCustomTransformer("callout", async (block) => {
     }
     
     // Combine parent text + children
-    // The parent text in callout is usually just text. We can wrap it in a p or span or just append.
-    // If has children, the parent text acts as the first paragraph/line.
+    // New Structure: Flex container with Icon on left, and ALL content (parent text + children) on right vertically.
     
     if (color && color !== 'default') {
          const className = `notion-${color.replace('_', '-')}`;
+         
          return `<blockquote class="${className}">
-            <div class="callout-content">
-                <div class="callout-icon-text">
-                    <span class="callout-icon">${icon}</span>
-                    <span class="callout-text">${text}</span>
+            <div class="callout-container">
+                <span class="callout-icon">${icon}</span>
+                <div class="callout-body">
+                    <p class="callout-text">${text}</p>
+                    ${childrenHtml ? `<div class="callout-children">${childrenHtml}</div>` : ''}
                 </div>
-                ${childrenHtml ? `<div class="callout-children">${childrenHtml}</div>` : ''}
             </div>
          </blockquote>`;
     }
