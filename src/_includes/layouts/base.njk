@@ -109,5 +109,106 @@
             });
         }
     </script>
+
+    <!-- Mermaid.js Support -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        
+        // Initialize with your preferred theme
+        // Detect current theme to set mermaid theme? For now default/dark.
+        const isDark = document.documentElement.classList.contains('dark');
+        mermaid.initialize({ 
+            startOnLoad: false,
+            // securityLevel: 'loose', // Uncomment if needed
+            theme: isDark ? 'dark' : 'default' 
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Find code blocks marked as mermaid
+            // markdown-it usually renders: <pre><code class="language-mermaid">...</code></pre>
+            const mermaidCodes = document.querySelectorAll('code.language-mermaid');
+            
+            for (const codeEl of mermaidCodes) {
+                const preEl = codeEl.parentElement;
+                // Only process if parent is <pre> to avoid inline codes if any
+                if (preEl.tagName.toLowerCase() !== 'pre') continue;
+                
+                const codeContent = codeEl.textContent;
+                const uniqueId = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+                
+                // --- Structure ---
+                // <div class="mermaid-wrapper ...">
+                //   <div class="header ...">
+                //      <span>Diagram</span> <button>Show Code</button>
+                //   </div>
+                //   <div class="diagram-container ..."><div class="mermaid">...</div></div>
+                //   <div class="code-container hidden ..."><pre>...</pre></div>
+                // </div>
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mermaid-wrapper border rounded-md my-6 overflow-hidden bg-card text-card-foreground shadow-sm';
+                
+                // Header
+                const header = document.createElement('div');
+                header.className = 'bg-muted/50 px-4 py-2 flex justify-between items-center text-sm border-b';
+                
+                const title = document.createElement('div');
+                title.className = 'font-semibold flex items-center gap-2';
+                title.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-network"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg> Mermaid Diagram';
+                
+                const toggleBtn = document.createElement('button');
+                toggleBtn.textContent = 'Show Code';
+                toggleBtn.className = 'inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 px-2';
+                
+                header.appendChild(title);
+                header.appendChild(toggleBtn);
+                
+                // Diagram Container
+                const diagramContainer = document.createElement('div');
+                diagramContainer.className = 'p-4 flex justify-center overflow-x-auto bg-white/50 dark:bg-black/20'; // Slight background for contrast
+                
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid';
+                mermaidDiv.textContent = codeContent; // mermaid.run will render this
+                diagramContainer.appendChild(mermaidDiv);
+                
+                // Code Container
+                const codeContainer = document.createElement('div');
+                codeContainer.className = 'hidden p-4 bg-muted overflow-x-auto border-t';
+                const codePre = document.createElement('pre');
+                codePre.className = 'text-xs font-mono whitespace-pre';
+                codePre.textContent = codeContent;
+                codeContainer.appendChild(codePre);
+                
+                wrapper.appendChild(header);
+                wrapper.appendChild(diagramContainer);
+                wrapper.appendChild(codeContainer);
+                
+                // Replace preEl with wrapper
+                preEl.replaceWith(wrapper);
+                
+                // Toggle Logic
+                toggleBtn.addEventListener('click', () => {
+                    const isCodeHidden = codeContainer.classList.contains('hidden');
+                    if (isCodeHidden) {
+                        codeContainer.classList.remove('hidden');
+                        diagramContainer.classList.add('hidden');
+                        toggleBtn.textContent = 'Show Diagram';
+                    } else {
+                        codeContainer.classList.add('hidden');
+                        diagramContainer.classList.remove('hidden');
+                        toggleBtn.textContent = 'Show Code';
+                    }
+                });
+            }
+            
+            // Run Mermaid
+            if (mermaidCodes.length > 0) {
+                 await mermaid.run({
+                    querySelector: '.mermaid'
+                });
+            }
+        });
+    </script>
 </body>
 </html>
