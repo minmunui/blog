@@ -129,7 +129,7 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     @apply text-[0.95em] leading-[1.6];
   }
   .callout-children p {
-    @apply !mb-2;
+    @apply !mt-0 !mb-2;
   }
   .callout-children p:last-child {
     @apply !mb-0;
