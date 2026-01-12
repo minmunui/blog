@@ -120,14 +120,13 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     @apply flex-shrink-0 select-none;
   }
   .callout-body {
-    @apply flex-1 flex flex-col gap-2; /* gap-2 handles spacing between parent text and children */
+    @apply flex-1 flex flex-col gap-0; /* Removed gap to tighten spacing */
   }
   .callout-text {
     @apply m-0;
   }
   .callout-children {
     @apply text-[0.95em] leading-[1.6];
-    /* Removed pl-8 because flex container handles alignment */
   }
   .callout-children p {
     @apply !mb-2;
