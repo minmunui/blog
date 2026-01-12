@@ -161,9 +161,9 @@ module.exports = function (eleventyConfig) {
                                         <span class="text-xs text-muted-foreground truncate m-0">${siteName}</span>
                                     </div>
                                 </div>
-                                ${image ? `
+                                ${image || '/assets/infologo/pusan_univ.png' ? `
                                 <div class="sm:w-40 h-48 sm:h-auto shrink-0 relative border-t sm:border-t-0 sm:border-l bg-muted">
-                                    <img src="${image}" alt="${title}" class="absolute inset-0 w-full h-full object-cover" style="margin: 0 !important; display: block;" />
+                                    <img src="${image || '/assets/infologo/pusan_univ.png'}" alt="${title}" class="absolute inset-0 w-full h-full object-cover" style="margin: 0 !important; display: block;" />
                                 </div>
                                 ` : ''}
                             </div>

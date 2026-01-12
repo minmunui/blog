@@ -83,7 +83,11 @@ title: Blog Archive
                       data-category="{{ post.data.category | default('Uncategorized') }}">
                 {% if post.data.thumbnail %}
                     <div class="aspect-video w-full overflow-hidden rounded-t-xl border-b bg-muted">
-                        <img src="{{ post.data.thumbnail | url }}" alt="{{ post.data.title }}" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
+                        {% if post.data.thumbnail and (post.data.thumbnail.startsWith('http') or post.data.thumbnail.startsWith('https')) %}
+                            <img src="{{ post.data.thumbnail }}" alt="{{ post.data.title }}" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
+                        {% else %}
+                            <img src="{{ post.data.thumbnail | url }}" alt="{{ post.data.title }}" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
+                        {% endif %}
                     </div>
                 {% else %}
                     <div class="aspect-video w-full overflow-hidden rounded-t-xl border-b bg-muted flex items-center justify-center text-muted-foreground">
