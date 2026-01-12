@@ -94,6 +94,12 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   }
 }
 
+@layer components {
+  .prose img {
+    @apply mx-auto block;
+  }
+}
+
 @layer utilities {
   .notion-gray { color: rgb(var(--notion-gray)); }
   .notion-brown { color: rgb(var(--notion-brown)); }

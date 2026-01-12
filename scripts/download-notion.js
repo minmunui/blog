@@ -1,5 +1,10 @@
 require("dotenv").config();
 const { NotionToMarkdown } = require("notion-to-md");
+const md = require('markdown-it')({
+    html: true,
+    breaks: true,
+    linkify: true
+});
 const fs = require("fs");
 const path = require("path");
 
@@ -240,7 +245,10 @@ n2m.setCustomTransformer("column_list", async (block) => {
          const contentBlocks = await n2m.pageToMarkdown(column.id);
          const contentMd = n2m.toMarkdownString(contentBlocks).parent;
          
-         html += `<div class="notion-column flex-1 min-w-0">${contentMd}</div>`;
+         // Render markdown to HTML to ensure it displays correctly inside the div
+         const contentHtml = md.render(contentMd);
+         
+         html += `<div class="notion-column flex-1 min-w-0">\n${contentHtml}\n</div>`;
     }
     
     html += `</div>`;
