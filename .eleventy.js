@@ -160,7 +160,7 @@ module.exports = function (eleventyConfig) {
                                     <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words m-0">${description}</p>
                                 </div>
                                 <div class="flex items-center gap-2 mt-2 min-w-0">
-                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0 m-0" alt="">` : ''}
+                                    ${result.favicon ? `<img src="${result.favicon}" class="w-4 h-4 shrink-0 !m-0" alt="">` : ''}
                                     <span class="text-xs text-muted-foreground truncate m-0">${siteName}</span>
                                 </div>
                             </div>

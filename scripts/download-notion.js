@@ -154,10 +154,11 @@ n2m.setCustomTransformer("paragraph", async (block) => {
 n2m.setCustomTransformer("image", async (block) => {
   const { image } = block;
   const imageUrl = image.type === "external" ? image.external.url : image.file.url;
-  const rawCaption = image.caption.length ? image.caption[0].plain_text : "";
   
-  // Parse width from caption (e.g., "My Image | 300" or "My Image | 50%")
-  // Regex looks for " | " followed by numbers and optional unit/percent at the end
+  // Fix: Join all plain text parts to ensure we capture the full caption including resize commands
+  const rawCaption = image.caption.map(item => item.plain_text).join("");
+  
+  // Parse width from caption
   const sizeMatch = rawCaption.match(/\|\s*(\d+(?:px|%)?)\s*$/);
   
   let width = null;
