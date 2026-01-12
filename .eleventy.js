@@ -175,8 +175,37 @@ module.exports = function (eleventyConfig) {
                   
                   content = content.replace(m.fullMatch, cardHtml);
               } catch (e) {
-                  console.error(`Error fetching OG data for ${m.url}:`, e);
-                  // Leave as is or maybe style it slightly?
+                  // Fallback for YouTube or general failures
+                  console.error(`Error fetching OG data for ${m.url}:`, e.message);
+                  
+                  if (m.url.includes('youtube.com') || m.url.includes('youtu.be')) {
+                      // Manual construction for YouTube if OGS fails (likely 429 or consent wall)
+                      const videoId = m.url.includes('youtu.be') ? m.url.split('youtu.be/')[1].split('?')[0] : (m.url.split('v=')[1] ? m.url.split('v=')[1].split('&')[0] : '');
+                      if (videoId) {
+                          const thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                          const fallbackHtml = `
+                            <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="block my-4 no-underline group max-w-full not-prose">
+                                <div class="border rounded-xl overflow-hidden hover:bg-muted/50 transition-colors flex flex-col sm:flex-row h-auto sm:h-32 w-full bg-card">
+                                    <div class="p-4 flex-1 flex flex-col justify-between overflow-hidden min-w-0">
+                                        <div class="min-w-0">
+                                            <h3 class="font-semibold text-base truncate group-hover:text-primary transition-colors pr-1 m-0">Watch on YouTube</h3>
+                                            <p class="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 break-words m-0">${m.url}</p>
+                                        </div>
+                                        <div class="flex items-center gap-2 mt-2 min-w-0">
+                                            <span class="text-xs text-muted-foreground truncate m-0">YouTube</span>
+                                        </div>
+                                    </div>
+                                    <div class="sm:w-40 h-48 sm:h-auto bg-muted shrink-0 border-t sm:border-t-0 sm:border-l relative">
+                                        <img src="${thumb}" alt="YouTube Thumbnail" class="absolute inset-0 w-full h-full object-cover m-0">
+                                    </div>
+                                </div>
+                            </a>
+                          `;
+                          content = content.replace(m.fullMatch, fallbackHtml);
+                          continue; // Skip the rest of loop
+                      }
+                  }
+                  
                   // content = content.replace(m.fullMatch, `<p><a href="${m.url}" class="text-red-500">Failed to load bookmark: ${m.url}</a></p>`);
               }
           }

@@ -39,7 +39,7 @@ async function downloadImage(url, filename) {
   // If file exists, skip download (build cache optimization)
   // You might want to remove this check if you need to update changed images with same ID
   if (fs.existsSync(filePath)) {
-    return `/assets/images/${filename}`;
+    return `../../assets/images/${filename}`;
   }
 
   try {
@@ -48,7 +48,7 @@ async function downloadImage(url, filename) {
     const buffer = Buffer.from(await res.arrayBuffer());
     fs.writeFileSync(filePath, buffer);
     console.log(`Downloaded image: ${filename}`);
-    return `/assets/images/${filename}`;
+    return `../../assets/images/${filename}`;
   } catch (error) {
     console.error(`Error downloading image ${url}:`, error);
     return null;
@@ -106,8 +106,79 @@ async function getBlogPosts() {
   return response.results;
 }
 
+
+
+// Re-writing the replacement content block
+// Defining a color-aware writer
+const colorize = (textArr) => {
+    return textArr.map(text => {
+        const content = text.plain_text || text.text?.content;
+        if (!content) return "";
+        
+        let md = content;
+        
+        // Apply logic closely matching n2m's default but adding span
+        if (text.annotations) {
+            if (text.annotations.code) md = `\`${md}\``;
+            if (text.annotations.bold) md = `**${md}**`;
+            if (text.annotations.italic) md = `_${md}_`;
+            if (text.annotations.strikethrough) md = `~~${md}~~`;
+            if (text.annotations.underline) md = `<u>${md}</u>`;
+            
+            if (text.annotations.color && text.annotations.color !== 'default') {
+                const colorMap = {
+                    "gray": "gray", "brown": "brown", "orange": "orange", "yellow": "orange", "green": "green", "blue": "blue", "purple": "purple", "pink": "pink", "red": "red",
+                    "gray_background": "background-color: #ebeced", "brown_background": "background-color: #e9e5e3", "orange_background": "background-color: #faebdd", 
+                    "yellow_background": "background-color: #fbf3db", "green_background": "background-color: #ddedea", "blue_background": "background-color: #e6f3f7", 
+                    "purple_background": "background-color: #f6f3f9", "pink_background": "background-color: #fbf2f5", "red_background": "background-color: #fbe4e4",
+                };
+                const style = colorMap[text.annotations.color] || text.annotations.color;
+                const isBg = text.annotations.color.includes('_background');
+                const styleAttr = isBg ? style : `color: ${style}`;
+                md = `<span style="${styleAttr}">${md}</span>`;
+            }
+        }
+        
+        // Handle links
+        if (text.href) {
+            md = `[${md}](${text.href})`;
+        }
+        
+        return md;
+    }).join("");
+};
+
+// Register transformers
+// Paragraph
+n2m.setCustomTransformer("paragraph", async (block) => {
+    return colorize(block.paragraph.rich_text);
+});
+// Headings
+n2m.setCustomTransformer("heading_1", async (block) => {
+    return `# ${colorize(block.heading_1.rich_text)}`;
+});
+n2m.setCustomTransformer("heading_2", async (block) => {
+    return `## ${colorize(block.heading_2.rich_text)}`;
+});
+n2m.setCustomTransformer("heading_3", async (block) => {
+    return `### ${colorize(block.heading_3.rich_text)}`;
+});
+// Lists
+n2m.setCustomTransformer("bulleted_list_item", async (block) => {
+    return `- ${colorize(block.bulleted_list_item.rich_text)}`;
+});
+n2m.setCustomTransformer("numbered_list_item", async (block) => {
+    return `1. ${colorize(block.numbered_list_item.rich_text)}`;
+});
+n2m.setCustomTransformer("quote", async (block) => {
+    return `> ${colorize(block.quote.rich_text)}`;
+});
+n2m.setCustomTransformer("callout", async (block) => {
+    const icon = block.callout.icon?.emoji || "💡";
+    return `> ${icon} ${colorize(block.callout.rich_text)}`;
+});
+
 async function convertToMarkdown(page) {
-    // notion-to-md uses the customClient we passed
     const mdblocks = await n2m.pageToMarkdown(page.id);
     const mdString = n2m.toMarkdownString(mdblocks);
     
