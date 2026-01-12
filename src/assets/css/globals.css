@@ -96,7 +96,7 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
 
 @layer components {
   .prose img {
-    @apply mx-auto block;
+    @apply mx-auto block my-4;
   }
 }
 

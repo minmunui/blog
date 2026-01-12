@@ -204,7 +204,7 @@ n2m.setCustomTransformer("image", async (block) => {
   // Standard markdown `![caption](url)` just puts img. 
   // Let's stick to simple img.
   
-  return `<img src="${finalUrl}" alt="${alt}" class="mx-auto block"${styleAttr} />${caption ? `<figcaption class="text-center text-sm text-gray-500 mt-2">${caption}</figcaption>` : ''}`; 
+  return `<img src="${finalUrl}" alt="${alt}" class="mx-auto block"${styleAttr} />${caption ? `<figcaption class="text-center text-sm text-gray-500 mt-1">${caption}</figcaption>` : ''}`; 
 });
 
 // Headings
