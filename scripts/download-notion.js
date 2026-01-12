@@ -42,9 +42,8 @@ async function downloadImage(url, filename) {
   const filePath = path.join(assetsDir, filename);
 
   // If file exists, skip download (build cache optimization)
-  // You might want to remove this check if you need to update changed images with same ID
   if (fs.existsSync(filePath)) {
-    return `../../assets/images/${filename}`;
+    return filename; // Return filename only
   }
 
   try {
@@ -53,7 +52,7 @@ async function downloadImage(url, filename) {
     const buffer = Buffer.from(await res.arrayBuffer());
     fs.writeFileSync(filePath, buffer);
     console.log(`Downloaded image: ${filename}`);
-    return `../../assets/images/${filename}`;
+    return filename; // Return filename on success
   } catch (error) {
     console.error(`Error downloading image ${url}:`, error);
     return null;
@@ -74,8 +73,6 @@ const customClient = {
 // Initialize NotionToMarkdown with custom client
 const n2m = new NotionToMarkdown({ notionClient: customClient });
 
-
-
 async function getBlogPosts() {
   console.log("Fetching posts from Notion via Custom Fetch...");
   const response = await notionFetch(`databases/${NOTION_DATABASE_ID}/query`, "POST", {
@@ -89,9 +86,6 @@ async function getBlogPosts() {
   return response.results;
 }
 
-
-
-// Re-writing the replacement content block
 // Defining a color-aware writer
 const colorize = (textArr) => {
     return textArr.map(text => {
@@ -110,17 +104,6 @@ const colorize = (textArr) => {
             
             if (text.annotations.color && text.annotations.color !== 'default') {
                 const color = text.annotations.color;
-                // Notion colors often include _background suffix for bg colors
-                // Our CSS classes are .notion-[color] and .notion-[color]-background
-                // If it is a background color, Notion sends e.g., "blue_background"
-                // Our class is .notion-blue-background.
-                // If it is text color, Notion sends "blue"
-                // Our class is .notion-blue.
-                
-                // We can directly map the notion color string to our class name format
-                // Notion: "blue" -> Class: "notion-blue"
-                // Notion: "blue_background" -> Class: "notion-blue-background"
-                
                 const className = `notion-${color.replace('_', '-')}`;
                 md = `<span class="${className}">${md}</span>`;
             }
@@ -135,8 +118,6 @@ const colorize = (textArr) => {
     }).join("");
 };
 
-// Register transformers
-// Paragraph
 // Register transformers
 // Paragraph
 n2m.setCustomTransformer("paragraph", async (block) => {
@@ -166,10 +147,6 @@ n2m.setCustomTransformer("image", async (block) => {
   
   if (sizeMatch) {
       width = sizeMatch[1];
-      // If no unit provided, assume px if simple number (though html width attr allows unitless, css likes px)
-      // Actually standard HTML width attribute is pixels. Style width needs unit.
-      // Let's rely on style width. If unitless, append px? 
-      // User says "| 300", implies 300px.
       if (!width.endsWith('%') && !width.endsWith('px')) {
           width += 'px';
       }
@@ -178,7 +155,6 @@ n2m.setCustomTransformer("image", async (block) => {
       caption = rawCaption.replace(sizeMatch[0], "").trim();
   }
   
-  // Use block ID as filename to ensure uniqueness
   let ext = ".png";
   if (imageUrl.includes(".jpg") || imageUrl.includes(".jpeg")) ext = ".jpg";
   else if (imageUrl.includes(".png")) ext = ".png";
@@ -186,24 +162,18 @@ n2m.setCustomTransformer("image", async (block) => {
   else if (imageUrl.includes(".webp")) ext = ".webp";
   
   const filename = `${block.id}${ext}`;
-  const localUrl = await downloadImage(imageUrl, filename);
-  const finalUrl = localUrl || imageUrl;
+  const downloadedFilename = await downloadImage(imageUrl, filename);
   
-  // Return HTML for precise control
-  // Apply 'mx-auto block' for centering (matching globals.css behavior)
+  // Use relative path for content images to work within the posts directory structure
+  // This ensures they load correctly when viewing the post
+  const finalUrl = downloadedFilename ? `../../assets/images/${downloadedFilename}` : imageUrl;
+  
   let styleAttr = "";
   if (width) {
       styleAttr = ` style="width: ${width};"`;
   }
   
   const alt = caption || "image";
-  
-  // Note: We use <img ...> which is inline-block by default. 
-  // We add 'mx-auto block' Tailwind classes to center it.
-  // We also put the caption in a figcaption if it exists?
-  // Standard markdown `![caption](url)` just puts img. 
-  // Let's stick to simple img.
-  
   return `<img src="${finalUrl}" alt="${alt}" class="mx-auto block"${styleAttr} />${caption ? `<figcaption class="text-center text-sm text-gray-500 mt-1">${caption}</figcaption>` : ''}`; 
 });
 
@@ -254,15 +224,12 @@ n2m.setCustomTransformer("callout", async (block) => {
     const text = colorize(block.callout.rich_text);
     if (color && color !== 'default') {
          const className = `notion-${color.replace('_', '-')}`;
-         // Callout in Notion is a block with background.
-         // We'll wrap in a div or blockquote with class. 
-         // Since standard MD for callout is blockquote, we use that.
          return `<blockquote class="${className}"> ${icon} ${text}</blockquote>`;
     }
     return `> ${icon} ${text}`;
 });
 
-// Lists (Leave as is for now to avoid breaking list structure)
+// Lists
 n2m.setCustomTransformer("bulleted_list_item", async (block) => {
     return `- ${colorize(block.bulleted_list_item.rich_text)}`;
 });
@@ -293,11 +260,6 @@ n2m.setCustomTransformer("column_list", async (block) => {
 });
 
 n2m.setCustomTransformer("column", async (block) => {
-    // Should be handled by column_list, but if called directly, return content
-    // However, since we handle recursion in column_list, this might not be reached
-    // UNLESS n2m traverses it.
-    // If we return undefined, n2m uses default.
-    // We return empty string because we handle the content in column_list
     return ""; 
 });
 
@@ -321,14 +283,14 @@ async function convertToMarkdown(page) {
     
     // Download thumbnail if exists
     if (thumbnail) {
-        // Use page ID + thumb suffix
         let ext = ".png";
         if (thumbnail.includes(".jpg") || thumbnail.includes(".jpeg")) ext = ".jpg";
         else if (thumbnail.includes(".png")) ext = ".png";
         
         const filename = `thumb-${page.id}${ext}`;
-        const localThumb = await downloadImage(thumbnail, filename);
-        if (localThumb) thumbnail = localThumb;
+        const downloadedFilename = await downloadImage(thumbnail, filename);
+        // Use ABSOLUTE path for frontmatter thumbnails so they can be processed by | url filter in templates
+        if (downloadedFilename) thumbnail = `/assets/images/${downloadedFilename}`;
     }
     
     const lastModified = page.last_edited_time ? new Date(page.last_edited_time).toISOString() : date;

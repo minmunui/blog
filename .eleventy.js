@@ -157,13 +157,13 @@ module.exports = function (eleventyConfig) {
                                         <p class="text-sm text-muted-foreground line-clamp-2 mt-1 m-0">${description}</p>
                                     </div>
                                     <div class="flex items-center gap-2 mt-2">
-                                        ${favicon ? `<img src="${favicon}" alt="" style="width: 16px; height: 16px; margin: 0 !important; display: block;" />` : ''}
+                                        ${favicon ? `<img src="${favicon.startsWith('/') && process.env.GO_LIVE ? '/blog' + favicon : favicon}" alt="" style="width: 16px; height: 16px; margin: 0 !important; display: block;" />` : ''}
                                         <span class="text-xs text-muted-foreground truncate m-0">${siteName}</span>
                                     </div>
                                 </div>
-                                ${image || '/assets/infologo/pusan_univ.png' ? `
+                                ${image || (process.env.GO_LIVE ? '/blog/assets/infologo/pusan_univ.png' : '/assets/infologo/pusan_univ.png') ? `
                                 <div class="sm:w-40 h-48 sm:h-auto shrink-0 relative border-t sm:border-t-0 sm:border-l bg-muted">
-                                    <img src="${image || '/assets/infologo/pusan_univ.png'}" alt="${title}" class="absolute inset-0 w-full h-full object-cover" style="margin: 0 !important; display: block;" />
+                                    <img src="${image || (process.env.GO_LIVE ? '/blog/assets/infologo/pusan_univ.png' : '/assets/infologo/pusan_univ.png')}" alt="${title}" class="absolute inset-0 w-full h-full object-cover" style="margin: 0 !important; display: block;" />
                                 </div>
                                 ` : ''}
                             </div>
