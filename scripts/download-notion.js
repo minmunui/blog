@@ -69,29 +69,7 @@ const customClient = {
 // Initialize NotionToMarkdown with custom client
 const n2m = new NotionToMarkdown({ notionClient: customClient });
 
-// Custom Transformer for Images
-n2m.setCustomTransformer("image", async (block) => {
-  const { image } = block;
-  const imageUrl = image.type === "external" ? image.external.url : image.file.url;
-  const caption = image.caption.length ? image.caption[0].plain_text : "";
-  
-  // Use block ID as filename to ensure uniqueness
-  // Determine extension from URL if possible, default to .png if complex
-  let ext = ".png";
-  if (imageUrl.includes(".jpg") || imageUrl.includes(".jpeg")) ext = ".jpg";
-  else if (imageUrl.includes(".png")) ext = ".png";
-  else if (imageUrl.includes(".gif")) ext = ".gif";
-  else if (imageUrl.includes(".webp")) ext = ".webp";
-  
-  const filename = `${block.id}${ext}`;
-  const localUrl = await downloadImage(imageUrl, filename);
 
-  if (localUrl) {
-    return `![${caption}](${localUrl})`;
-  } else {
-    return `![${caption}](${imageUrl})`; // Fallback to original URL
-  }
-});
 
 async function getBlogPosts() {
   console.log("Fetching posts from Notion via Custom Fetch...");
@@ -154,32 +132,100 @@ const colorize = (textArr) => {
 
 // Register transformers
 // Paragraph
+// Register transformers
+// Paragraph
 n2m.setCustomTransformer("paragraph", async (block) => {
-    return colorize(block.paragraph.rich_text);
+    const { color } = block.paragraph;
+    const text = colorize(block.paragraph.rich_text);
+    
+    if (color && color !== 'default') {
+        const className = `notion-${color.replace('_', '-')}`;
+        return `<p class="${className}">${text}</p>`;
+    }
+    return text;
 });
+
+// Image Transformer
+n2m.setCustomTransformer("image", async (block) => {
+  const { image } = block;
+  const imageUrl = image.type === "external" ? image.external.url : image.file.url;
+  const caption = image.caption.length ? image.caption[0].plain_text : "";
+  
+  // Use block ID as filename to ensure uniqueness
+  let ext = ".png";
+  if (imageUrl.includes(".jpg") || imageUrl.includes(".jpeg")) ext = ".jpg";
+  else if (imageUrl.includes(".png")) ext = ".png";
+  else if (imageUrl.includes(".gif")) ext = ".gif";
+  else if (imageUrl.includes(".webp")) ext = ".webp";
+  
+  const filename = `${block.id}${ext}`;
+  const localUrl = await downloadImage(imageUrl, filename);
+  const finalUrl = localUrl || imageUrl;
+  
+  return `![${caption}](${finalUrl})`; 
+});
+
 // Headings
 n2m.setCustomTransformer("heading_1", async (block) => {
-    return `# ${colorize(block.heading_1.rich_text)}`;
+    const { color } = block.heading_1;
+    const text = colorize(block.heading_1.rich_text);
+    if (color && color !== 'default') {
+        const className = `notion-${color.replace('_', '-')}`;
+        return `<h1 class="${className}">${text}</h1>`;
+    }
+    return `# ${text}`;
 });
 n2m.setCustomTransformer("heading_2", async (block) => {
-    return `## ${colorize(block.heading_2.rich_text)}`;
+    const { color } = block.heading_2;
+    const text = colorize(block.heading_2.rich_text);
+    if (color && color !== 'default') {
+        const className = `notion-${color.replace('_', '-')}`;
+        return `<h2 class="${className}">${text}</h2>`;
+    }
+    return `## ${text}`;
 });
 n2m.setCustomTransformer("heading_3", async (block) => {
-    return `### ${colorize(block.heading_3.rich_text)}`;
+    const { color } = block.heading_3;
+    const text = colorize(block.heading_3.rich_text);
+    if (color && color !== 'default') {
+        const className = `notion-${color.replace('_', '-')}`;
+        return `<h3 class="${className}">${text}</h3>`;
+    }
+    return `### ${text}`;
 });
-// Lists
+
+// Quote
+n2m.setCustomTransformer("quote", async (block) => {
+    const { color } = block.quote;
+    const text = colorize(block.quote.rich_text);
+    if (color && color !== 'default') {
+        const className = `notion-${color.replace('_', '-')}`;
+        return `<blockquote class="${className}">${text}</blockquote>`;
+    }
+    return `> ${text}`;
+});
+
+// Callout
+n2m.setCustomTransformer("callout", async (block) => {
+    const { color } = block.callout;
+    const icon = block.callout.icon?.emoji || "💡";
+    const text = colorize(block.callout.rich_text);
+    if (color && color !== 'default') {
+         const className = `notion-${color.replace('_', '-')}`;
+         // Callout in Notion is a block with background.
+         // We'll wrap in a div or blockquote with class. 
+         // Since standard MD for callout is blockquote, we use that.
+         return `<blockquote class="${className}"> ${icon} ${text}</blockquote>`;
+    }
+    return `> ${icon} ${text}`;
+});
+
+// Lists (Leave as is for now to avoid breaking list structure)
 n2m.setCustomTransformer("bulleted_list_item", async (block) => {
     return `- ${colorize(block.bulleted_list_item.rich_text)}`;
 });
 n2m.setCustomTransformer("numbered_list_item", async (block) => {
     return `1. ${colorize(block.numbered_list_item.rich_text)}`;
-});
-n2m.setCustomTransformer("quote", async (block) => {
-    return `> ${colorize(block.quote.rich_text)}`;
-});
-n2m.setCustomTransformer("callout", async (block) => {
-    const icon = block.callout.icon?.emoji || "💡";
-    return `> ${icon} ${colorize(block.callout.rich_text)}`;
 });
 
 async function convertToMarkdown(page) {
