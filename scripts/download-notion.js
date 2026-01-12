@@ -154,7 +154,28 @@ n2m.setCustomTransformer("paragraph", async (block) => {
 n2m.setCustomTransformer("image", async (block) => {
   const { image } = block;
   const imageUrl = image.type === "external" ? image.external.url : image.file.url;
-  const caption = image.caption.length ? image.caption[0].plain_text : "";
+  const rawCaption = image.caption.length ? image.caption[0].plain_text : "";
+  
+  // Parse width from caption (e.g., "My Image | 300" or "My Image | 50%")
+  // Regex looks for " | " followed by numbers and optional unit/percent at the end
+  const sizeMatch = rawCaption.match(/\|\s*(\d+(?:px|%)?)\s*$/);
+  
+  let width = null;
+  let caption = rawCaption;
+  
+  if (sizeMatch) {
+      width = sizeMatch[1];
+      // If no unit provided, assume px if simple number (though html width attr allows unitless, css likes px)
+      // Actually standard HTML width attribute is pixels. Style width needs unit.
+      // Let's rely on style width. If unitless, append px? 
+      // User says "| 300", implies 300px.
+      if (!width.endsWith('%') && !width.endsWith('px')) {
+          width += 'px';
+      }
+      
+      // Remove the size syntax from the caption text
+      caption = rawCaption.replace(sizeMatch[0], "").trim();
+  }
   
   // Use block ID as filename to ensure uniqueness
   let ext = ".png";
@@ -167,7 +188,22 @@ n2m.setCustomTransformer("image", async (block) => {
   const localUrl = await downloadImage(imageUrl, filename);
   const finalUrl = localUrl || imageUrl;
   
-  return `![${caption}](${finalUrl})`; 
+  // Return HTML for precise control
+  // Apply 'mx-auto block' for centering (matching globals.css behavior)
+  let styleAttr = "";
+  if (width) {
+      styleAttr = ` style="width: ${width};"`;
+  }
+  
+  const alt = caption || "image";
+  
+  // Note: We use <img ...> which is inline-block by default. 
+  // We add 'mx-auto block' Tailwind classes to center it.
+  // We also put the caption in a figcaption if it exists?
+  // Standard markdown `![caption](url)` just puts img. 
+  // Let's stick to simple img.
+  
+  return `<img src="${finalUrl}" alt="${alt}" class="mx-auto block"${styleAttr} />${caption ? `<figcaption class="text-center text-sm text-gray-500 mt-2">${caption}</figcaption>` : ''}`; 
 });
 
 // Headings
