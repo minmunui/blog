@@ -2,10 +2,19 @@ const markdownIt = require("markdown-it");
 const { DateTime } = require("luxon");
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 const ogs = require("open-graph-scraper");
+const markdownItAnchor = require("markdown-it-anchor");
+const eleventyPluginToc = require("eleventy-plugin-toc");
 
 module.exports = function (eleventyConfig) {
   // Plugins
   eleventyConfig.addPlugin(syntaxHighlight);
+  eleventyConfig.addPlugin(eleventyPluginToc, {
+    tags: ['h2', 'h3'], // Only H2 and H3
+    wrapper: 'div',     // Wrap in div
+    wrapperClass: 'toc-content', // Class for styling
+    ul: true,           // Use ul/li
+    flat: false,        // Nested hierarchy
+  });
 
   // Ignore .gitignore (required since we gitignore the generated posts)
   eleventyConfig.setUseGitIgnore(false);
@@ -31,11 +40,12 @@ module.exports = function (eleventyConfig) {
 
   // Markdown Library
   const mdLib = markdownIt({
-
-
     html: true,
     breaks: true,
     linkify: true,
+  }).use(markdownItAnchor, {
+    permalink: markdownItAnchor.permalink.headerLink(), // Add anchor links to headers
+    slugify: (s) => s.trim().toLowerCase().replace(/[\s+]+/g, '-').replace(/[^\w\u3131-\uD79D\-]/g, ''), // Support Korean + English slugify
   });
 
   // Custom Embed Rule for markdown-it

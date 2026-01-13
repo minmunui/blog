@@ -27,8 +27,19 @@ layout: layouts/base.njk
     </div>
   </div>
   <hr class="my-8 lg:my-10" />
-  <div class="prose dark:prose-invert max-w-none">
-    {{ content | safe }}
+  <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 relative">
+    <!-- Main Content -->
+    <div class="prose dark:prose-invert max-w-none flex-1 min-w-0">
+      {{ content | safe }}
+    </div>
+
+    <!-- Floating TOC (Desktop) -->
+    <aside class="hidden lg:block w-64 shrink-0 order-last">
+        <div class="sticky top-24 max-h-[calc(100vh-100px)] overflow-y-auto pr-2">
+            <h4 class="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground">On this page</h4>
+            {{ content | toc | safe }}
+        </div>
+    </aside>
   </div>
 
   <hr class="my-8" />

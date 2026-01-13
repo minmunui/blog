@@ -134,6 +134,23 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   .callout-children p:last-child {
     @apply !mb-0;
   }
+
+  /* TOC Styles */
+  .toc-content ul {
+    @apply list-none pl-0 m-0;
+  }
+  .toc-content ul ul {
+    @apply pl-4 mt-1 border-l border-border/50 ml-1;
+  }
+  .toc-content li {
+    @apply mt-2;
+  }
+  .toc-content a {
+    @apply text-sm text-muted-foreground hover:text-foreground transition-colors no-underline block leading-snug py-0.5;
+  }
+  .toc-content a.active {
+    @apply text-foreground font-medium;
+  }
 }
 
 @layer utilities {
