@@ -86,22 +86,46 @@ npm run dev
 
 ---
 
-## 사용법 2: GitHub Actions로 자동 배포하기
-GitHub 저장소에 올리고 자동으로 배포되게 하는 방법입니다. 로컬의 `.env` 파일은 보안상 업로드할 수 없으므로, GitHub의 기능을 이용해 환경변수를 등록해야 합니다.
+## 🚀 시작하기 (Fork하여 사용하시는 분들)
+내 블로그로 만들기 위해 아래 과정을 순서대로 따라해 주세요.
 
-### 1. Secrets 등록
-자신의 GitHub 저장소 페이지에서 다음 메뉴로 이동합니다.
-1. 상단의 **Settings** 탭 클릭
-2. 왼쪽 메뉴의 **Secrets and variables** > **Actions** 클릭
-3. **New repository secret** 버튼 클릭
+### 1단계: 저장소 Fork (복사)
+1. 이 저장소 우측 상단의 **Fork** 버튼을 클릭합니다.
+2. **Repository name**을 `blog`로 설정하는 것을 권장합니다.
+   - **주의**: 만약 다른 이름(예: `my-blog`)으로 설정한다면, `.eleventy.js` 파일의 225번째 줄을 해당 이름으로 수정해야 합니다 (`/blog/` -> `/my-blog/`).
+3. **Create fork**를 눌러 내 계정으로 가져옵니다.
 
-다음 두 가지 변수를 각각 등록해 주세요. 값은 로컬 `.env`에 적었던 것과 동일합니다.
-- **Name**: `NOTION_TOKEN` / **Secret**: (토큰 값 붙여넣기)
-- **Name**: `NOTION_DATABASE_ID` / **Secret**: (데이터베이스 ID 붙여넣기)
+### 2단계: Notion 설정
+1. [Notion Developers](https://www.notion.so/my-integrations)에서 **새 통합(New integration)**을 만듭니다.
+   - 이름: `My Blog` (원하는 대로)
+   - 프라이버시: `Internal` (기본값)
+   - 생성 후 **Internal Integration Secret** (토큰)을 복사해 둡니다. (`secret_...` 로 시작)
+2. 연결할 Notion 데이터베이스 페이지로 이동합니다.
+3. 우측 상단 `...` 메뉴 > `연결(Connections)` > 방금 만든 통합(`My Blog`)을 선택하여 연결합니다.
+4. 데이터베이스 페이지의 URL에서 **데이터베이스 ID**를 복사합니다.
+   - 형식: `https://www.notion.so/myworkspace/[데이터베이스ID]?v=...` (32자리 문자열)
 
-### 2. 배포
-- `main` 브랜치에 코드를 푸시하면 자동으로 Actions가 실행되어 블로그가 배포됩니다.
-- Notion에 글을 새로 썼다면, GitHub Actions 탭에서 워크플로우를 수동으로 실행하거나 빈 커밋을 푸시하여 갱신할 수 있습니다.
+### 3단계: GitHub Secrets 등록
+보안이 필요한 Notion 키를 GitHub 저장소에 등록합니다.
+1. Fork한 내 저장소에서 **Settings** 탭 클릭
+2. 왼쪽 메뉴: **Secrets and variables** > **Actions** 클릭
+3. **New repository secret** 버튼 클릭 (총 2개 등록)
+   - **Name**: `NOTION_TOKEN`, **Secret**: (복사한 토큰 값)
+   - **Name**: `NOTION_DATABASE_ID`, **Secret**: (복사한 데이터베이스 ID)
+
+### 4단계: GitHub Pages 활성화
+1. 저장소 **Settings** 탭 클릭
+2. 왼쪽 메뉴: **Pages** 클릭
+3. **Build and deployment** > **Source** 항목을 **GitHub Actions**로 변경합니다. (Beta 또는 일반 옵션)
+   - *참고: 이 설정이 안 보인다면, 한 번 배포가 실패한 뒤에 나타날 수도 있습니다. 일단 5단계를 진행해 보세요.*
+
+### 5단계: 배포 실행
+모든 설정이 완료되었습니다!
+1. **Actions** 탭으로 이동합니다.
+2. 왼쪽의 **Deploy Eleventy Blog** 워크플로우를 클릭합니다.
+3. 우측의 **Run workflow** 버튼 > **Run workflow**를 클릭하여 수동으로 배포를 시작합니다.
+   - 또는 코드를 조금 수정해서 `main` 브랜치에 푸시(Push)해도 배포가 시작됩니다.
+4. 배포가 성공하면(초록색 체크), `https://[내아이디].github.io/blog` 에서 블로그를 확인할 수 있습니다.
 
 ---
 
