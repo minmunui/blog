@@ -1,11 +1,8 @@
 # Eleventy Notion Blog
 
-*"Notion에서 글을 작성하면 Github Blog에 포스팅이 게시되게 할 수 없을까?"*라는 생각과 함께 이 프로젝트가 시작되었습니다.
+아래 페이지에서 자세한 사용 방법을 확인하실 수 있습니다.
 
-구글에 *"Github Blog 만들기*"라고 검색할 경우 대부분의 블로거들인 Jekyll을 이용하여 정적 페이지를 생성하고, 마크다운을 이용하여 블로그 글을 작성하라고 소개합니다. 
-
-물론 이 도구는 많은 사람들이 선호하는 도구입니다. 하지만 대부분의 사람들에게는 `Ruby`보다는 `Javascript`가 더 익숙하고, `마크다운`보다 `노션`이 더 편리합니다.
-이를 위해 노션 database에 페이지를 추가하여 쓰면 해당 글이 Github Page에 자동으로 포스팅되는 기능을 구현했습니다.
+https://minmunui.github.io/blog/posts/notion-to-github-blog/
 
 ### Notion Database 구조
 ![notion database screenshot](<images/notion-db.png>)
