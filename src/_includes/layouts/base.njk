@@ -35,7 +35,7 @@
 </head>
 <body class="min-h-screen bg-background text-foreground flex flex-col font-sans antialiased">
     
-    <header class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300">
         <div class="flex h-14 items-center w-full px-4 md:px-8">
             <div class="mr-4 hidden md:flex">
                 <a href="{{ '/' | url }}" class="mr-6 flex items-center space-x-2">
@@ -92,6 +92,30 @@
         const themeToggleBtn = document.getElementById('theme-toggle');
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
+        const header = document.querySelector('header');
+        
+        // Hide Header on Scroll
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            // Only trigger if scrolled down a bit to avoid jitter at top
+            if (currentScrollY > 100) {
+                if (currentScrollY > lastScrollY) {
+                    // Start Hide
+                    header.classList.add('-translate-y-full');
+                } else {
+                    // Show
+                    header.classList.remove('-translate-y-full');
+                }
+            } else {
+                header.classList.remove('-translate-y-full');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
         
         // Theme Toggle
         themeToggleBtn.addEventListener('click', function() {

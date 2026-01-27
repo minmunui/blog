@@ -286,8 +286,43 @@ n2m.setCustomTransformer("column", async (block) => {
     return ""; 
 });
 
+// Helper to sequentially renumber "1. " list items
+function renumberLists(blocks) {
+    let listCounter = 1;
+    for (const block of blocks) {
+        // Check pattern for numbered list item ("1. ")
+        if (block.parent && block.parent.trim().startsWith("1. ")) {
+             block.parent = block.parent.replace(/^1\. /, `${listCounter}. `);
+             listCounter++;
+        } else if (block.parent) {
+             const trimmed = block.parent.trim();
+             // Reset counter ONLY if we hit a structural break:
+             // - Headings (#)
+             // - Bullet lists (- )
+             // - Quotes like callouts (> )
+             // - Dividers (---)
+             // We do NOT reset for Paragraphs (text) or Images (<img...), allowing lists to span across them.
+             if (trimmed.startsWith("#") || 
+                 trimmed.startsWith("- ") || 
+                 trimmed.startsWith("> ") || 
+                 trimmed.startsWith("---")) {
+                 listCounter = 1;
+             }
+        }
+        
+        // Recursively handle children
+        if (block.children && block.children.length > 0) {
+            renumberLists(block.children);
+        }
+    }
+}
+
 async function convertToMarkdown(page) {
     const mdblocks = await n2m.pageToMarkdown(page.id);
+    
+    // Post-process blocks to fix list numbering
+    renumberLists(mdblocks);
+    
     const mdString = n2m.toMarkdownString(mdblocks);
     
     // Extract metadata

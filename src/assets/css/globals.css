@@ -99,6 +99,10 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     @apply mx-auto block my-4;
   }
 
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    @apply scroll-mt-20; 
+  }
+
   .prose blockquote[class*="notion-"] {
     @apply not-italic border-l-0 !p-6 rounded-lg my-4;
   }
