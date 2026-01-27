@@ -78,6 +78,35 @@ layout: layouts/base.njk
     const images = document.querySelectorAll('.prose img');
     images.forEach(img => img.style.cursor = 'zoom-in');
 
+    // TOC Active Highlighting
+    const updateToc = () => {
+      const headings = Array.from(document.querySelectorAll('.prose h2, .prose h3'));
+      let activeHeading = null;
+
+      for (const heading of headings) {
+        const rect = heading.getBoundingClientRect();
+        // If heading is above the "reading line" (150px from top)
+        if (rect.top < 150) {
+          activeHeading = heading;
+        } else {
+          break;
+        }
+      }
+
+      document.querySelectorAll('.toc-content a').forEach(link => {
+        link.classList.remove('active');
+        if (activeHeading && link.getAttribute('href') === `#${activeHeading.getAttribute('id')}`) {
+          link.classList.add('active');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', () => {
+      window.requestAnimationFrame(updateToc);
+    });
+    // Initial call
+    updateToc();
+
     if (contentArea && typeof Viewer !== 'undefined') {
       new Viewer(contentArea, {
         toolbar: {

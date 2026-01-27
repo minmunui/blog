@@ -150,10 +150,10 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
     @apply mt-2;
   }
   .toc-content a {
-    @apply text-sm text-muted-foreground hover:text-foreground transition-colors no-underline block leading-snug py-0.5;
+    @apply text-sm text-muted-foreground hover:text-foreground transition-all duration-200 no-underline block leading-snug py-1 border-l-2 border-transparent pl-3;
   }
   .toc-content a.active {
-    @apply text-foreground font-medium;
+    @apply text-primary font-semibold border-primary bg-muted/30 -ml-px;
   }
 }
 
