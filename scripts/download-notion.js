@@ -287,32 +287,50 @@ n2m.setCustomTransformer("column", async (block) => {
 });
 
 // Helper to sequentially renumber "1. " list items
-function renumberLists(blocks) {
+// Helper to indent content by 4 spaces (for list continuity)
+function indentContent(text) {
+    if (!text) return "";
+    return text.split('\n').map(line => `    ${line}`).join('\n');
+}
+
+// Helper to sequentially renumber "1. " list items AND indent intermediate content
+function processListStructure(blocks) {
     let listCounter = 1;
+    let inList = false;
+
     for (const block of blocks) {
+        const content = block.parent || "";
+        const trimmed = content.trim();
+
         // Check pattern for numbered list item ("1. ")
-        if (block.parent && block.parent.trim().startsWith("1. ")) {
+        const isNumberedList = trimmed.startsWith("1. ");
+        
+        // Structural breakers
+        const isBreaker = trimmed.startsWith("#") || 
+                          trimmed.startsWith("- ") || 
+                          trimmed.startsWith("> ") || 
+                          trimmed.startsWith("---");
+
+        if (isNumberedList) {
+             inList = true;
+             // Fix number
              block.parent = block.parent.replace(/^1\. /, `${listCounter}. `);
              listCounter++;
-        } else if (block.parent) {
-             const trimmed = block.parent.trim();
-             // Reset counter ONLY if we hit a structural break:
-             // - Headings (#)
-             // - Bullet lists (- )
-             // - Quotes like callouts (> )
-             // - Dividers (---)
-             // We do NOT reset for Paragraphs (text) or Images (<img...), allowing lists to span across them.
-             if (trimmed.startsWith("#") || 
-                 trimmed.startsWith("- ") || 
-                 trimmed.startsWith("> ") || 
-                 trimmed.startsWith("---")) {
-                 listCounter = 1;
-             }
+        } else if (isBreaker) {
+             inList = false;
+             listCounter = 1;
+        } else if (inList && trimmed.length > 0) {
+             // Intermediate content within a list (e.g. Image, Paragraph)
+             // We indent it so Markdown treats it as part of the previous item
+             block.parent = indentContent(content);
+        } else if (!inList) {
+            // Just normal content outside list, ensure counter is 1
+            listCounter = 1;
         }
         
         // Recursively handle children
         if (block.children && block.children.length > 0) {
-            renumberLists(block.children);
+            processListStructure(block.children);
         }
     }
 }
@@ -320,8 +338,8 @@ function renumberLists(blocks) {
 async function convertToMarkdown(page) {
     const mdblocks = await n2m.pageToMarkdown(page.id);
     
-    // Post-process blocks to fix list numbering
-    renumberLists(mdblocks);
+    // Post-process blocks to fix list numbering and structure
+    processListStructure(mdblocks);
     
     const mdString = n2m.toMarkdownString(mdblocks);
     
