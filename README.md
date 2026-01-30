@@ -4,6 +4,10 @@
 
 https://minmunui.github.io/blog/posts/notion-to-github-blog/
 
+실제 블로그는 아래와 같이 생겼습니다.
+
+https://minmunui.github.io/blog/
+
 ### Notion Database 구조
 ![notion database screenshot](<images/notion-db.png>)
 
